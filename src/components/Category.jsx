@@ -1,37 +1,63 @@
-import { View, Text, StyleSheet, SafeAreaView } from "react-native"
+import React from 'react';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, Dimensions, View } from 'react-native';
 
-const CartScreen = () => {
-  return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
-        <Text style={styles.title}>Cart</Text>
-        <Text style={styles.subtitle}>Your cart is empty</Text>
+const { width, height } = Dimensions.get('window');
+
+const Category = () => {
+    return (
+      <View style={{paddingHorizontal: width * 0.024,}}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoriesContainer}>
+            <TouchableOpacity style={styles.categoryButtonActive}>
+                <Text style={styles.categoryButtonTextActive}>All Pizzas</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.categoryButton}>
+                <Text style={styles.categoryButtonText}>Vegetarian</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.categoryButton}>
+                <Text style={styles.categoryButtonText}>Specials</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.categoryButton}>
+                <Text style={styles.categoryButtonText}>Specials</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.categoryButton}>
+                <Text style={styles.categoryButtonText}>Specials</Text>
+            </TouchableOpacity>
+        </ScrollView>
       </View>
-    </SafeAreaView>
-  )
-}
+    );
+};
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#ffffff",
-  },
-  content: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: 24,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#0f0e0d",
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: "#868686",
-  },
-})
+    categoriesContainer: {
+        marginTop: height * 0.016,
+        flexDirection: "row",
+    },
+    categoryButtonActive: {
+        backgroundColor: "#dd714e",
+        paddingHorizontal: width * 0.024,
+        paddingVertical: height * 0.012,
+        borderRadius: width * 0.05,
+        marginRight: width * 0.012,
+        marginLeft: width * 0.012,
+    },
+    categoryButtonTextActive: {
+        color: "#ffffff",
+        fontWeight: "500",
+        fontSize: width * 0.04,
+    },
+    categoryButton: {
+        backgroundColor: "#f8f8f8",
+        paddingHorizontal: width * 0.024,
+        paddingVertical: height * 0.012,
+        borderRadius: width * 0.05,
+        marginRight: width * 0.012,
+        marginLeft: width * 0.012,
+    },
+    categoryButtonText: {
+        color: "#868686",
+        fontWeight: "250",
+        fontSize: width * 0.04,
+    },
+});
 
-export default CartScreen
+export default Category;

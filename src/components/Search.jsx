@@ -1,18 +1,19 @@
 import Icon from "react-native-vector-icons/Feather"
 import MaterialIcons from "react-native-vector-icons/MaterialIcons"
-import { View, StyleSheet, TextInput, TouchableOpacity } from "react-native"
+import { View, StyleSheet, TextInput, TouchableOpacity, Dimensions } from "react-native"
+
+const { width, height } = Dimensions.get('window');
 
 const Search = () => {
     return (
         <View style={styles.searchContainer}>
             <View style={styles.searchBar}>
-                <Icon name="search" size={20} color="#868686" style={styles.searchIcon} />
+                <Icon name="search" size={height * 0.025} color="#868686" style={styles.searchIcon} />
                 <TextInput
                     style={styles.searchInput}
                     placeholder="Search your favourite pizza"
                     placeholderTextColor="#868686"
                 />
-                <Icon name="sliders" size={20} color="#0f0e0d" />
             </View>
         </View>
     )
@@ -20,23 +21,23 @@ const Search = () => {
 
 const styles = StyleSheet.create({
     searchContainer: {
-    paddingHorizontal: 24,
-    marginTop: 24,
+    paddingHorizontal: width * 0.024,
+    marginTop: height * 0.024,
   },
   searchBar: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#f8f8f8",
-    borderRadius: 30,
-    paddingHorizontal: 20,
-    paddingVertical: 12,
+    borderRadius: height * 0.030,
+    paddingHorizontal: width * 0.020,
+    paddingVertical: height * 0.012,
   },
   searchIcon: {
-    marginRight: 8,
+    marginLeft: width * 0.04,
   },
   searchInput: {
     flex: 1,
-    fontSize: 16,
+    fontSize: width * 0.04,
     color: "#868686",
   },
 })

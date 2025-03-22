@@ -1,8 +1,10 @@
-import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet, ScrollView, SafeAreaView, StatusBar } from "react-native"
+import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet, ScrollView, SafeAreaView, StatusBar, Dimensions } from "react-native"
 import Icon from "react-native-vector-icons/Feather"
 import MaterialIcons from "react-native-vector-icons/MaterialIcons"
 import Search from "../components/Search"
 import Category from "../components/Category"
+
+const { width, height } = Dimensions.get('window');
 
 const HomeScreen = () => {
   return (
@@ -14,14 +16,14 @@ const HomeScreen = () => {
           <View>
             <Text style={styles.locationLabel}>Location</Text>
             <View style={styles.locationContainer}>
-              <Icon name="map-pin" size={20} color="#b55638" />
+              <Icon name="map-pin" size={height * 0.020} color="#b55638" />
               <Text style={styles.locationText}>New York, USA</Text>
-              <Icon name="chevron-down" size={20} color="#0f0e0d" />
+              <Icon name="chevron-down" size={height * 0.020} color="#0f0e0d" />
             </View>
           </View>
           <View style={styles.notificationContainer}>
-            <Icon name="bell" size={20} color="#0f0e0d" />
-            <View style={styles.notificationDot} />
+            <Icon name="shopping-cart" size={height * 0.030} color="#0f0e0d" />
+            
           </View>
         </View>
 
@@ -37,7 +39,7 @@ const HomeScreen = () => {
               <Text style={styles.orderButtonText}>Order Now</Text>
             </TouchableOpacity>
           </View>
-          <Image source={{ uri: "https://via.placeholder.com/180" }} style={styles.offerImage} />
+          <Image source={require('../assets/welcome_pizza.png')} style={styles.offerImage} />
         </View>
 
         {/* Popular Pizza */}
@@ -55,12 +57,12 @@ const HomeScreen = () => {
         <View style={styles.pizzaItemsContainer}>
           {/* Pepperoni Pizza */}
           <View style={styles.pizzaItem}>
-            <Image source={{ uri: "https://via.placeholder.com/112" }} style={styles.pizzaImage} />
+            <Image source={require('../assets/welcome_pizza.png')} style={styles.pizzaImage} />
             <View style={styles.pizzaDetails}>
               <View style={styles.pizzaNameContainer}>
                 <Text style={styles.pizzaName}>Pepperoni Pizza</Text>
                 <TouchableOpacity>
-                  <Icon name="heart" size={24} color="#868686" />
+                  <Icon name="heart" size={height * 0.024} color="#868686" />
                 </TouchableOpacity>
               </View>
               <Text style={styles.offerValidity}>Offer valid today only</Text>
@@ -68,7 +70,7 @@ const HomeScreen = () => {
                 <Text style={styles.deliveryTime}>20min</Text>
                 <Text style={styles.dot}>•</Text>
                 <Text style={styles.rating}>4.5</Text>
-                <MaterialIcons name="star" size={16} color="#fcca18" />
+                <MaterialIcons name="star" size={height * 0.016} color="#fcca18" />
               </View>
               <View style={styles.priceContainer}>
                 <View style={styles.priceWrapper}>
@@ -78,7 +80,7 @@ const HomeScreen = () => {
                   </View>
                 </View>
                 <TouchableOpacity style={styles.addButton}>
-                  <Icon name="plus" size={16} color="#ffffff" />
+                  <Icon name="plus" size={height * 0.02} color="#ffffff" />
                 </TouchableOpacity>
               </View>
             </View>
@@ -86,12 +88,12 @@ const HomeScreen = () => {
 
           {/* Margherita Pizza */}
           <View style={styles.pizzaItem}>
-            <Image source={{ uri: "https://via.placeholder.com/112" }} style={styles.pizzaImage} />
+            <Image source={require('../assets/welcome_pizza.png')} style={styles.pizzaImage} />
             <View style={styles.pizzaDetails}>
               <View style={styles.pizzaNameContainer}>
                 <Text style={styles.pizzaName}>Margherita Pizza</Text>
                 <TouchableOpacity>
-                  <Icon name="heart" size={24} color="#868686" />
+                  <Icon name="heart" size={height * 0.024} color="#868686" />
                 </TouchableOpacity>
               </View>
               <Text style={styles.offerValidity}>Offer valid today only</Text>
@@ -99,7 +101,7 @@ const HomeScreen = () => {
                 <Text style={styles.deliveryTime}>30min</Text>
                 <Text style={styles.dot}>•</Text>
                 <Text style={styles.rating}>4.6</Text>
-                <MaterialIcons name="star" size={16} color="#fcca18" />
+                <MaterialIcons name="star" size={height * 0.016} color="#fcca18" />
               </View>
               <View style={styles.priceContainer}>
                 <View style={styles.priceWrapper}>
@@ -109,7 +111,7 @@ const HomeScreen = () => {
                   </View>
                 </View>
                 <TouchableOpacity style={styles.addButton}>
-                  <Icon name="plus" size={16} color="#ffffff" />
+                  <Icon name="plus" size={height * 0.02} color="#ffffff" />
                 </TouchableOpacity>
               </View>
             </View>
@@ -129,29 +131,29 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: 24,
-    paddingTop: 24,
+    paddingHorizontal: width * 0.024,
+    paddingTop: height * 0.024,
   },
   locationLabel: {
-    fontSize: 18,
+    fontSize: height * 0.018,
     color: "#868686",
   },
   locationContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 4,
+    marginTop: height * 0.004,
   },
   locationText: {
-    fontSize: 20,
+    fontSize: height * 0.024,
     fontWeight: "bold",
     color: "#0f0e0d",
-    marginLeft: 4,
-    marginRight: 4,
+    marginLeft: width * 0.004,
+    marginRight: width * 0.004,
   },
   notificationContainer: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    width: width * 0.15,
+    height: width * 0.15,
+    borderRadius: width * 0.075,
     backgroundColor: "#f8f8f8",
     justifyContent: "center",
     alignItems: "center",
@@ -159,19 +161,19 @@ const styles = StyleSheet.create({
   },
   notificationDot: {
     position: "absolute",
-    top: 12,
-    right: 12,
-    width: 10,
-    height: 10,
-    borderRadius: 5,
+    top: height * 0.012,
+    right: width * 0.012,
+    width: width * 0.010,
+    height: width * 0.010,
+    borderRadius: height * 0.005,
     backgroundColor: "#fb3e49",
   },
   offerContainer: {
-    marginHorizontal: 24,
-    marginTop: 24,
+    marginHorizontal: width * 0.024,
+    marginTop: height * 0.024,
     backgroundColor: "#f8f8f8",
-    borderRadius: 24,
-    padding: 24,
+    borderRadius: height * 0.024,
+    padding: height * 0.024,
     flexDirection: "row",
     position: "relative",
     overflow: "hidden",
@@ -180,72 +182,71 @@ const styles = StyleSheet.create({
     width: "60%",
   },
   offerTitle: {
-    fontSize: 24,
+    fontSize: height * 0.024,
     fontWeight: "bold",
     color: "#0f0e0d",
   },
   offerSubtitle: {
-    fontSize: 18,
+    fontSize: height * 0.018,
     color: "#868686",
-    marginTop: 4,
+    marginTop: height * 0.004,
   },
   orderButton: {
     backgroundColor: "#dd714e",
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    borderRadius: 30,
-    marginTop: 16,
+    paddingHorizontal: width * 0.024,
+    paddingVertical: height * 0.012,
+    borderRadius: height * 0.030,
+    marginTop: height * 0.016,
     alignSelf: "flex-start",
   },
   orderButtonText: {
     color: "#ffffff",
     fontWeight: "500",
-    fontSize: 16,
+    fontSize: height * 0.016,
   },
   offerImage: {
-    width: 180,
-    height: 180,
+    width: height * 0.180,
+    height: height * 0.200,
     position: "absolute",
-    right: -20,
-    top: 10,
+    right: -(width * 0.020),
   },
   sectionHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: 24,
-    marginTop: 32,
+    paddingHorizontal: width * 0.024,
+    marginTop: height * 0.032,
   },
   sectionTitle: {
-    fontSize: 24,
+    fontSize: height * 0.024,
     fontWeight: "bold",
     color: "#0f0e0d",
   },
   seeAllText: {
-    fontSize: 16,
+    fontSize: height * 0.016,
     fontWeight: "500",
     color: "#dd714e",
   },
 
   pizzaItemsContainer: {
-    paddingHorizontal: 24,
-    marginTop: 24,
-    paddingBottom: 100, // Add padding to account for bottom navigation
+    paddingHorizontal: width * 0.024,
+    marginTop: height * 0.024,
+    paddingBottom: height * 0.1, 
   },
   pizzaItem: {
     backgroundColor: "#f8f8f8",
-    borderRadius: 24,
-    padding: 16,
+    borderRadius: height * 0.024,
+    padding: height * 0.016,
     flexDirection: "row",
-    marginBottom: 16,
+    marginBottom: height * 0.016,
   },
   pizzaImage: {
-    width: 112,
-    height: 112,
-    borderRadius: 56,
+    width: height * 0.112,
+    height: height * 0.112,
+    borderRadius: height * 0.056,
   },
   pizzaDetails: {
-    marginLeft: 16,
+    marginLeft: width * 0.016,
     flex: 1,
   },
   pizzaNameContainer: {
@@ -254,65 +255,65 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   pizzaName: {
-    fontSize: 20,
+    fontSize: height * 0.020,
     fontWeight: "bold",
     color: "#0f0e0d",
   },
   offerValidity: {
-    fontSize: 14,
+    fontSize: height * 0.014,
     color: "#868686",
-    marginTop: 4,
+    marginTop: height * 0.004,
   },
   pizzaInfoContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 8,
+    marginTop: height * 0.008,
   },
   deliveryTime: {
-    fontSize: 14,
+    fontSize: height * 0.014,
     color: "#868686",
   },
   dot: {
-    fontSize: 14,
+    fontSize: height * 0.014,
     color: "#868686",
-    marginHorizontal: 8,
+    marginHorizontal: width * 0.008,
   },
   rating: {
-    fontSize: 14,
+    fontSize: height * 0.014,
     color: "#868686",
-    marginRight: 4,
+    marginRight: width * 0.004,
   },
   priceContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginTop: 8,
+    marginTop: height * 0.008,
   },
   priceWrapper: {
     flexDirection: "row",
     alignItems: "center",
   },
   price: {
-    fontSize: 20,
+    fontSize: height * 0.020,
     fontWeight: "bold",
     color: "#0f0e0d",
   },
   discountBadge: {
     backgroundColor: "#dd714e",
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 30,
-    marginLeft: 8,
+    paddingHorizontal: height * 0.008,
+    paddingVertical: height * 0.004,
+    borderRadius: height * 0.030,
+    marginLeft: width * 0.008,
   },
   discountText: {
-    fontSize: 12,
+    fontSize: height * 0.012,
     color: "#ffffff",
   },
   addButton: {
     backgroundColor: "#0f0e0d",
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: height * 0.045,
+    height: height * 0.035,
+    borderRadius: height * 0.016,
     justifyContent: "center",
     alignItems: "center",
   },
