@@ -1,7 +1,7 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Dimensions } from "react-native";
 import Icon from "react-native-vector-icons/Feather";
 
 // Import screens
@@ -16,7 +16,10 @@ import FavoritesScreen from "./src/screens/FavoritesScreen";
 import ProfileScreen from "./src/screens/ProfileScreen";
 
 const Stack = createStackNavigator();
-const Tab = createBottomTabNavigator()
+const Tab = createBottomTabNavigator();
+const { width, height } = Dimensions.get('window');
+const active = width * 0.08;
+const inactive = width * 0.06;
 
 const BottomTabs = () => {
   return (
@@ -36,10 +39,10 @@ const BottomTabs = () => {
           tabBarIcon: ({ color, focused }) =>
             focused ? (
               <View style={styles.activeIconContainer}>
-                <Icon name="home" size={30} color="#dd714e" />
+                <Icon name="home" size={active} color="#dd714e" />
               </View>
             ) : (
-              <Icon name="home" size={24} color={color} />
+              <Icon name="home" size={inactive} color={color} />
             ),
         }}
       />
@@ -50,10 +53,10 @@ const BottomTabs = () => {
           tabBarIcon: ({ color, focused }) =>
             focused ? (
               <View style={styles.activeIconContainer}>
-                <Icon name="shopping-cart" size={30} color="#dd714e" />
+                <Icon name="shopping-cart" size={active} color="#dd714e" />
               </View>
             ) : (
-              <Icon name="shopping-cart" size={24} color={color} />
+              <Icon name="shopping-cart" size={inactive} color={color} />
             ),
         }}
       />
@@ -64,10 +67,10 @@ const BottomTabs = () => {
           tabBarIcon: ({ color, focused }) =>
             focused ? (
               <View style={styles.activeIconContainer}>
-                <Icon name="search" size={30} color="#dd714e" />
+                <Icon name="search" size={active} color="#dd714e" />
               </View>
             ) : (
-              <Icon name="search" size={24} color={color} />
+              <Icon name="search" size={inactive} color={color} />
             ),
         }}
       />
@@ -78,10 +81,10 @@ const BottomTabs = () => {
           tabBarIcon: ({ color, focused }) =>
             focused ? (
               <View style={styles.activeIconContainer}>
-                <Icon name="heart" size={30} color="#dd714e" />
+                <Icon name="heart" size={active} color="#dd714e" />
               </View>
             ) : (
-              <Icon name="heart" size={24} color={color} />
+              <Icon name="heart" size={inactive} color={color} />
             ),
         }}
       />
@@ -92,10 +95,10 @@ const BottomTabs = () => {
           tabBarIcon: ({ color, focused }) =>
             focused ? (
               <View style={styles.activeIconContainer}>
-                <Icon name="user" size={30} color="#dd714e" />
+                <Icon name="user" size={active} color="#dd714e" />
               </View>
             ) : (
-              <Icon name="user" size={24} color={color} />
+              <Icon name="user" size={inactive} color={color} />
             ),
         }}
       />
@@ -132,9 +135,9 @@ const styles = StyleSheet.create({
 
   bottomNavigation: {
     position: "absolute",
-    bottom: 20,
-    marginLeft:10,
-    marginRight:10,
+    bottom: height * 0.01,
+    marginLeft: width * 0.01,
+    marginRight: width * 0.01,
     backgroundColor: "#0f0e0d",
     flexDirection: "row",
     alignItems: "center",
