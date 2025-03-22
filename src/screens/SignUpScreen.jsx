@@ -1,10 +1,51 @@
-import { StyleSheet, Text, View, SafeAreaView, TextInput, TouchableOpacity, Image, Dimensions, ScrollView } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View, SafeAreaView, TextInput, TouchableOpacity, Image, Dimensions, ScrollView, Alert } from 'react-native'
+import React, { useState } from 'react';
 import Icon from "react-native-vector-icons/Feather";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
+import { auth, db } from '../../firebaseConfig';
 
 const { width, height } = Dimensions.get('window');
 
 const SignUpScreen = ({ navigation }) => {
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSignUp = async () => {
+    if (!username || !email || !password) {
+      Alert.alert("Error", "All fields are required!");
+      return;
+    }
+
+    try {
+      // Create user with email & password
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      console.log("Sign-Up Successful!");
+
+      // Store user data in Firestore
+      await setDoc(doc(db, "users", user.uid), {
+        uid: user.uid,
+        name: username,
+        email: user.email,
+        photoURL: user.photoURL || "",
+        createdAt: new Date(),
+      });
+
+      console.log("User account stored in Firestore!");
+      Alert.alert("Success", "Account created successfully!");
+
+      navigation.navigate("Main"); // Navigate to the main screen
+    } catch (error) {
+      console.error("Sign-Up Error:", error);
+      if (error.code === "auth/email-already-in-use") {
+        Alert.alert("Error", "This email is already in use. Try logging in.");
+      }
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -18,17 +59,17 @@ const SignUpScreen = ({ navigation }) => {
 
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Username:</Text>
-          <TextInput style={styles.input} placeholder="Username" />
+          <TextInput style={styles.input} placeholder="Username" value={username} onChangeText={setUsername} />
+
+          <Text style={styles.label}>Email:</Text>
+          <TextInput style={styles.input} placeholder="Email" value={email} onChangeText={setEmail} keyboardType="email-address" />
 
           <Text style={styles.label}>Password:</Text>
-          <TextInput style={styles.input} placeholder="Password" secureTextEntry />
-
-          <Text style={styles.label}>Repeat Password:</Text>
-          <TextInput style={styles.input} placeholder="Password" secureTextEntry />
+          <TextInput style={styles.input} placeholder="Password" value={password} onChangeText={setPassword} secureTextEntry />
         </View>
 
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.signUpButton}>
+          <TouchableOpacity style={styles.signUpButton} onPress={handleSignUp}>
             <Text style={styles.signUpButtonText}>Sign Up</Text>
           </TouchableOpacity>
         </View>
@@ -86,7 +127,6 @@ const styles = StyleSheet.create({
     marginVertical: 20, 
     textAlign: 'left', 
     paddingLeft: 20,
-    color: '#C7C7C7',
     backgroundColor: '#F0EEEE',
     fontWeight: 'bold', 
   },

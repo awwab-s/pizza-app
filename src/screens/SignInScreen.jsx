@@ -1,9 +1,91 @@
-import { StyleSheet, Text, View, SafeAreaView, TextInput, TouchableOpacity, Image, Dimensions, ScrollView } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View, SafeAreaView, TextInput, TouchableOpacity, Image, Dimensions, ScrollView, Alert } from 'react-native'
+import React, { useState, useEffect } from 'react';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { getAuth, signInWithEmailAndPassword, signInWithCredential, GoogleAuthProvider } from "firebase/auth";
+import { collection, doc, setDoc, getDoc } from "firebase/firestore";
+import { auth, WEB_CLIENT_ID, db } from '../../firebaseConfig';
+import { create } from 'react-test-renderer';
 
 const { width, height } = Dimensions.get('window');
 
 const SignInScreen = ({ navigation }) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  useEffect(() => {
+    GoogleSignin.configure({
+      webClientId: WEB_CLIENT_ID,
+      offlineAccess: true,
+      forceCodeForRefreshToken: true,
+    });
+  }, []);
+
+  // Google Sign-In
+  const handleGoogleSignIn = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      
+      const { data } = await GoogleSignin.signIn();
+
+      if (!data.idToken) {
+        throw new Error('No ID token found');
+      }
+      const googleCredential = GoogleAuthProvider.credential(data.idToken);
+      const userCredential = await signInWithCredential(auth, googleCredential);
+      const user = userCredential.user;
+      
+      console.log("Google Sign-In Successful!");
+
+      // Check if user already exists in Firestore
+      const userRef = doc(db, "users", user.uid);
+      const userSnap = await getDoc(userRef);
+
+      if (!userSnap.exists()) {
+        // Add a new document to Firestore with user data
+        await setDoc(userRef, {
+          uid: user.uid,
+          name: user.displayName || user.name,
+          email: user.email || user.email,
+          photoURL: user.photoURL || "",
+          createdAt: new Date(),
+        });
+        console.log("User added to Firestore!");
+        Alert.alert("Success", "User account created!");
+      } else {
+        console.log("User already exists in Firestore");
+      }
+
+      navigation.navigate("Main"); // Replace with your target screen
+    } catch (error) {
+      console.log('Google Sign-In Error:', error);
+    }
+  };
+
+  // Email & Password Sign-In
+  const handleSignIn = async () => {
+    if (!email || !password) {
+      Alert.alert("Error", "All fields are required!");
+      return;
+    }
+
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      console.log("Sign-In Successful!");
+      Alert.alert("Success", "User logged in!");
+
+      navigation.navigate("Main");
+    } catch (error) {
+      console.error("Sign-In Error:", error);
+      if (error.code === "auth/user-not-found" || error.code === "auth/wrong-password") {
+        Alert.alert("Error", "Invalid email or password");
+      } else if (error.code === "auth/invalid-email") {
+        Alert.alert("Error", "Please enter a valid email address");
+      }
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -16,21 +98,21 @@ const SignInScreen = ({ navigation }) => {
         </View>
 
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>Username:</Text>
-          <TextInput style={styles.input} placeholder="Username" />
+          <Text style={styles.label}>Email:</Text>
+          <TextInput style={styles.input} placeholder="Username" onChangeText={setEmail}  />
 
           <Text style={styles.label}>Password:</Text>
-          <TextInput style={styles.input} placeholder="Password" secureTextEntry />
+          <TextInput style={styles.input} placeholder="Password" onChangeText={setPassword} secureTextEntry />
         </View>
 
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.signInButton}>
+          <TouchableOpacity style={styles.signInButton} onPress={handleSignIn}>
             <Text style={styles.signInButtonText}>Log in</Text>
           </TouchableOpacity>
 
           <Text style={styles.orText}>OR</Text>
 
-          <TouchableOpacity style={styles.googleButton}>
+          <TouchableOpacity style={styles.googleButton} onPress={handleGoogleSignIn}>
             <Image source={require('../assets/google_icon.png')} style={styles.googleIcon} />
             <Text style={styles.googleButtonText}>CONTINUE WITH GOOGLE</Text>
           </TouchableOpacity>
@@ -89,7 +171,6 @@ const styles = StyleSheet.create({
     marginVertical: 20, 
     textAlign: 'left', 
     paddingLeft: 20,
-    color: '#C7C7C7',
     backgroundColor: '#F0EEEE',
     fontWeight: 'bold', 
   },
