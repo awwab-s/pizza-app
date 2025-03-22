@@ -19,86 +19,88 @@ const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator()
 
 const BottomTabs = () => {
-  <Tab.Navigator
-    screenOptions={{
-      headerShown: false,
-      tabBarShowLabel: false,
-      tabBarStyle: styles.bottomNavigation,
-      tabBarActiveTintColor: "#dd714e",
-      tabBarInactiveTintColor: "#868686",
-    }}
-  >
-    <Tab.Screen
-      name="Home"
-      component={HomeScreen}
-      options={{
-        tabBarIcon: ({ color, focused }) =>
-          focused ? (
-            <View style={styles.activeIconContainer}>
-              <Icon name="home" size={30} color="#dd714e" />
-            </View>
-          ) : (
-            <Icon name="home" size={24} color={color} />
-          ),
+  return (
+    <Tab.Navigator
+      screenOptions={{
+        headerShown: false,
+        tabBarShowLabel: false,
+        tabBarStyle: styles.bottomNavigation,
+        tabBarActiveTintColor: "#dd714e",
+        tabBarInactiveTintColor: "#868686",
       }}
-    />
-    <Tab.Screen
-      name="Cart"
-      component={CartScreen}
-      options={{
-        tabBarIcon: ({ color, focused }) =>
-          focused ? (
-            <View style={styles.activeIconContainer}>
-              <Icon name="shopping-cart" size={30} color="#dd714e" />
-            </View>
-          ) : (
-            <Icon name="shopping-cart" size={24} color={color} />
-          ),
-      }}
-    />
-    <Tab.Screen
-      name="Search"
-      component={SearchScreen}
-      options={{
-        tabBarIcon: ({ color, focused }) =>
-          focused ? (
-            <View style={styles.activeIconContainer}>
-              <Icon name="search" size={30} color="#dd714e" />
-            </View>
-          ) : (
-            <Icon name="search" size={24} color={color} />
-          ),
-      }}
-    />
-    <Tab.Screen
-      name="Favorites"
-      component={FavoritesScreen}
-      options={{
-        tabBarIcon: ({ color, focused }) =>
-          focused ? (
-            <View style={styles.activeIconContainer}>
-              <Icon name="heart" size={30} color="#dd714e" />
-            </View>
-          ) : (
-            <Icon name="heart" size={24} color={color} />
-          ),
-      }}
-    />
-    <Tab.Screen
-      name="Profile"
-      component={ProfileScreen}
-      options={{
-        tabBarIcon: ({ color, focused }) =>
-          focused ? (
-            <View style={styles.activeIconContainer}>
-              <Icon name="user" size={30} color="#dd714e" />
-            </View>
-          ) : (
-            <Icon name="user" size={24} color={color} />
-          ),
-      }}
-    />
-  </Tab.Navigator>
+    >
+      <Tab.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{
+          tabBarIcon: ({ color, focused }) =>
+            focused ? (
+              <View style={styles.activeIconContainer}>
+                <Icon name="home" size={30} color="#dd714e" />
+              </View>
+            ) : (
+              <Icon name="home" size={24} color={color} />
+            ),
+        }}
+      />
+      <Tab.Screen
+        name="Cart"
+        component={CartScreen}
+        options={{
+          tabBarIcon: ({ color, focused }) =>
+            focused ? (
+              <View style={styles.activeIconContainer}>
+                <Icon name="shopping-cart" size={30} color="#dd714e" />
+              </View>
+            ) : (
+              <Icon name="shopping-cart" size={24} color={color} />
+            ),
+        }}
+      />
+      <Tab.Screen
+        name="Search"
+        component={SearchScreen}
+        options={{
+          tabBarIcon: ({ color, focused }) =>
+            focused ? (
+              <View style={styles.activeIconContainer}>
+                <Icon name="search" size={30} color="#dd714e" />
+              </View>
+            ) : (
+              <Icon name="search" size={24} color={color} />
+            ),
+        }}
+      />
+      <Tab.Screen
+        name="Favorites"
+        component={FavoritesScreen}
+        options={{
+          tabBarIcon: ({ color, focused }) =>
+            focused ? (
+              <View style={styles.activeIconContainer}>
+                <Icon name="heart" size={30} color="#dd714e" />
+              </View>
+            ) : (
+              <Icon name="heart" size={24} color={color} />
+            ),
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{
+          tabBarIcon: ({ color, focused }) =>
+            focused ? (
+              <View style={styles.activeIconContainer}>
+                <Icon name="user" size={30} color="#dd714e" />
+              </View>
+            ) : (
+              <Icon name="user" size={24} color={color} />
+            ),
+        }}
+      />
+    </Tab.Navigator>
+  );
 }
 
 const App = () => {
