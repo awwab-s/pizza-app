@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react"
-import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet, ScrollView, SafeAreaView, StatusBar, Dimensions, ActivityIndicator, PermissionsAndroid, Alert } from "react-native"
+import React, { useState, useEffect, useContext } from "react"
+import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet, ScrollView, SafeAreaView, StatusBar, Dimensions, ActivityIndicator, PermissionsAndroid, Alert, FlatList } from "react-native"
 import Icon from "react-native-vector-icons/Feather"
 import MaterialIcons from "react-native-vector-icons/MaterialIcons"
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -7,21 +7,22 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Search from "../components/Search"
 import Category from "../components/Category"
 import Geolocation from "react-native-geolocation-service";
+import { PizzaContext, getGoogleDriveImage } from "../context/PizzaContext";
 import { doc, setDoc } from "firebase/firestore";
 import { auth, db } from "../../firebaseConfig";
 
 const { width, height } = Dimensions.get('window');
 
-const PizzaItem = ({ imgURL, name, price, discountText }) => {
+export const PizzaItem = ({ imgURL, name, price, discountText }) => {
   return (
     <View style={styles.pizzaItem}>
-      <Image source={imgURL} style={styles.pizzaImage} />
+      <Image source={{ uri: imgURL}} style={styles.pizzaImage} />
       <View style={styles.pizzaDetails}>
         <View style={styles.pizzaNameContainer}>
           <Text style={styles.pizzaName}>{name}</Text>
-          <TouchableOpacity>
-            <Icon name="heart" size={height * 0.024} color="#868686" />
-          </TouchableOpacity>
+          
+          <Icon name="heart" size={height * 0.024} color="#868686" />
+          
         </View>
         
         <View style={styles.priceContainer}>
@@ -31,19 +32,20 @@ const PizzaItem = ({ imgURL, name, price, discountText }) => {
               <Text style={styles.discountText}>{discountText}</Text>
             </View>
           </View>
-          <TouchableOpacity style={styles.addButton}>
+          <View style={styles.addButton}>
             <Icon name="plus" size={height * 0.02} color="#ffffff" />
-          </TouchableOpacity>
+          </View>
         </View>
       </View>
     </View>
   )
 }
 
-const HomeScreen = () => {
+const HomeScreen = ({navigation}) => {
   const [location, setLocation] = useState("Select a location");
   const [isGuest, setIsGuest] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { pizzas, fetchPizzas } = useContext(PizzaContext);
 
   useEffect(() => {
     const checkGuestUser = async () => {
@@ -146,6 +148,8 @@ const HomeScreen = () => {
     }
   };
 
+    
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
@@ -170,10 +174,12 @@ const HomeScreen = () => {
               )}
             </TouchableOpacity>
           </View>
+          <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
           <View style={styles.notificationContainer}>
             <Ionicons name="cart-outline" size={height * 0.04} color="#0f0e0d" />
             
           </View>
+          </TouchableOpacity>
         </View>
 
         {/* Search Bar */}
@@ -205,10 +211,19 @@ const HomeScreen = () => {
         {/* Pizza Items */}
         <View style={styles.pizzaItemsContainer}>
           {/* Pepperoni Pizza */}
-          <PizzaItem imgURL={require('../assets/welcome_pizza.png')} name="Pepperoni Pizza" price="$10.00" discountText="25% Off" />
+          <FlatList
+                    data={pizzas}
+                    keyExtractor={(item) => item.id}
+                    renderItem={({ item }) => (
+                      <TouchableOpacity onPress={() => navigation.navigate('PizzaOrder', { pizza: item })}>
+                        <PizzaItem imgURL={ getGoogleDriveImage(item.imageURL) } name= {item.name} price={item.basePrice} discountText="25% Off" />
+                      </TouchableOpacity>
+                    )}
+                  />
+          
 
           {/* Margherita Pizza */}
-          <PizzaItem imgURL={require('../assets/welcome_pizza.png')} name="Margherita Pizza" price="$8.00" discountText="20% Off" />
+          {/*<PizzaItem imgURL={require('../assets/welcome_pizza.png')} name="Margherita Pizza" price="$8.00" discountText="20% Off" />*/}
           
         </View>
       </ScrollView>

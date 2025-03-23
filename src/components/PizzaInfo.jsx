@@ -2,23 +2,19 @@ import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from "react-nati
 
 const { width } = Dimensions.get("window")
 
-const PizzaInfo = () => {
+const PizzaInfo = ({pizza}) => {
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>Pepperoni Pizza</Text>
+        <Text style={styles.title}>{pizza.name}</Text>
         <View style={styles.ratingContainer}>
-          <Text style={styles.ratingText}>4.5</Text>
+          <Text style={styles.ratingText}>{pizza.rating}</Text>
           <Text style={styles.starIcon}>★</Text>
         </View>
       </View>
 
       <Text style={styles.description}>
-        Baked to perfection on a crispy golden crust, this pizza delivers the perfect balance of bold flavors and cheesy
-        goodness...
-        <TouchableOpacity>
-          <Text style={styles.readMore}>Read More</Text>
-        </TouchableOpacity>
+        {pizza.description}
       </Text>
     </View>
   )

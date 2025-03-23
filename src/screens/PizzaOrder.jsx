@@ -6,19 +6,18 @@ import SizeSelector from "../components/SizeSelector"
 import CrustSelector from "../components/CrustSelector"
 import ToppingsSelector from "../components/ToppingsSelector"
 import Footer from "../components/Footer"
+import { getGoogleDriveImage } from "../context/PizzaContext"
 
 const { width } = Dimensions.get("window")
 
-const PizzaOrder = () => {
+const PizzaOrder = ({ route }) => {
+  const { pizza } = route.params;
   const [size, setSize] = useState("medium")
   const [crust, setCrust] = useState("cheese")
   const [toppings, setToppings] = useState([])
   const [isFavorite, setIsFavorite] = useState(false)
 
   const prices = {
-    small: 8,
-    medium: 12,
-    large: 16,
     cheeseCrust: 1.5,
     extraCheese: 2.5,
     mushroom: 2.5,
@@ -28,9 +27,9 @@ const PizzaOrder = () => {
     let total = 0
 
     // Add size price
-    if (size === "small") total += prices.small
-    if (size === "medium") total += prices.medium
-    if (size === "large") total += prices.large
+    if (size === "small") total += pizza.size["small"]
+    if (size === "medium") total += pizza.size["medium"]
+    if (size === "large") total += pizza.size["large"]
 
     // Add cheese crust price
     if (crust === "cheese") total += prices.cheeseCrust
@@ -53,11 +52,11 @@ const PizzaOrder = () => {
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <Header isFavorite={isFavorite} setIsFavorite={setIsFavorite} imgURL={require('../assets/welcome_pizza.png')} />
+        <Header isFavorite={isFavorite} setIsFavorite={setIsFavorite} imgURL={{ uri: getGoogleDriveImage(pizza.imageURL)}} />
         <View style={styles.content}>
-          <PizzaInfo />
+          <PizzaInfo pizza = {pizza}/>
 
-          <SizeSelector size={size} setSize={setSize} prices={prices} />
+          <SizeSelector size={pizza.size} setSize={setSize} pizzasize={size}/>
 
           <CrustSelector crust={crust} setCrust={setCrust} prices={prices} />
 
@@ -65,7 +64,7 @@ const PizzaOrder = () => {
         </View>
       </ScrollView>
 
-      <Footer total={calculateTotal()} />
+      <Footer total={calculateTotal()} pizza={pizza} size={size} />
     </View>
   )
 }

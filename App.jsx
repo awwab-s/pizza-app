@@ -9,6 +9,8 @@ import { View, StyleSheet, TouchableOpacity, Dimensions } from "react-native";
 import Icon from "react-native-vector-icons/Feather";
 import Cart from "react-native-vector-icons/Ionicons";
 
+import { PizzaProvider } from "./src/context/PizzaContext";
+
 // Import screens
 import SplashScreen from "./src/screens/SplashScreen";
 import WelcomeScreen from "./src/screens/WelcomeScreen";
@@ -21,6 +23,8 @@ import FavoritesScreen from "./src/screens/FavoritesScreen";
 import ProfileScreen from "./src/screens/ProfileScreen";
 import uploadPizzas from "./src/data/uploadPizzas";
 import DetailsScreen from "./src/screens/DetailsScreen";
+import PizzaOrder from "./src/screens/PizzaOrder";
+import CheckoutScreen from "./src/screens/CheckoutScreen";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -30,7 +34,8 @@ const inactive = width * 0.06;
 
 const BottomTabs = () => {
   return (
-    <Tab.Navigator
+    <PizzaProvider>
+      <Tab.Navigator
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,
@@ -54,20 +59,7 @@ const BottomTabs = () => {
             ),
         }}
       />
-      <Tab.Screen
-        name="Cart"
-        component={CartScreen}
-        options={{
-          tabBarIcon: ({ color, focused }) =>
-            focused ? (
-              <View style={styles.activeIconContainer}>
-                <Cart name="cart-outline" size={active + width * 0.015} color="#B55638" />
-              </View>
-            ) : (
-              <Cart name="cart-outline" size={inactive + width * 0.013} color={color} />
-            ),
-        }}
-      />
+      
       <Tab.Screen
         name="Search"
         component={SearchScreen}
@@ -110,7 +102,8 @@ const BottomTabs = () => {
             ),
         }}
       />
-    </Tab.Navigator>
+      </Tab.Navigator>
+    </PizzaProvider>
   );
 }
 
@@ -127,10 +120,13 @@ const App = () => {
         <Stack.Screen name="Welcome" component={WelcomeScreen} />
         <Stack.Screen name="SignIn" component={SignInScreen} />
         <Stack.Screen name="SignUp" component={SignUpScreen} />
+        <Stack.Screen name="Cart" component={CartScreen} />
+        <Stack.Screen name="PizzaOrder" component={PizzaOrder} />
+        <Stack.Screen name="Checkout" component={CheckoutScreen} />
         <Stack.Screen name="Main" component={BottomTabs} />
       </Stack.Navigator>
     </NavigationContainer>
-    // <DetailsScreen />
+    //<DetailsScreen />
   )
 }
 

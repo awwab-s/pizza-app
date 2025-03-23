@@ -2,13 +2,15 @@ import { View, Image, TouchableOpacity, StyleSheet, Dimensions } from "react-nat
 import Icon from "react-native-vector-icons/Feather"
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from "react-native-vector-icons/MaterialIcons"
+import { useNavigation } from "@react-navigation/native";
 
 const { width, height } = Dimensions.get("window")
 
 const Header = ({ isFavorite, setIsFavorite, imgURL }) => {
+  const navigation = useNavigation()
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.backButton}>
+      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
         <Icon name="chevron-left" size={width * 0.05} color="#8e8e8e" />
       </TouchableOpacity>
 

@@ -1,16 +1,18 @@
 import React from 'react';
 import LottieView from 'lottie-react-native';
 import { View, StyleSheet, Dimensions, Text, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 const { width, height } = Dimensions.get('window');
 
 export default function CheckoutScreen() {
+  const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <LottieView style = {styles.loading} source={require('../assets/delivery.json')} autoPlay loop />
       <Text style={{fontSize: height*0.020, fontWeight: 'bold', color: '#dd714e'}}>Your pizza is on the way!</Text>
       <Text style={{fontSize: height*0.030, fontWeight: 'bold', color: '#868686'}}>Order # 12447</Text>
-      <TouchableOpacity style={styles.Button} >
+      <TouchableOpacity style={styles.Button} onPress={() => navigation.navigate("Main")}>
         <Text style={styles.ButtonText}>Go Back</Text>
       </TouchableOpacity>
 

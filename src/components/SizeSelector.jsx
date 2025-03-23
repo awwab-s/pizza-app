@@ -2,30 +2,30 @@ import { View, StyleSheet } from "react-native"
 import SectionHeader from "./SectionHeader"
 import RadioButton from "./RadioButton"
 
-const SizeSelector = ({ size, setSize, prices }) => {
+const SizeSelector = ({ size, setSize, pizzasize}) => {
   return (
     <View style={styles.container}>
       <SectionHeader title="Choose Size" required={true} />
       
       <View style={styles.optionsContainer}>
         <RadioButton 
-          selected={size === 'small'} 
+          selected={pizzasize === 'small'} 
           label="Small - 6"
-          price={`${prices.small}`}
+          price={`$${size["small"]}`}
           onPress={() => setSize('small')} 
         />
         
         <RadioButton 
-          selected={size === 'medium'} 
+          selected={pizzasize === 'medium'} 
           label="Medium - 10" 
-          price={`$${prices.medium}`}
+          price={`$${size["medium"]}`}
           onPress={() => setSize('medium')} 
         />
         
         <RadioButton 
-          selected={size === 'large'} 
+          selected={pizzasize === 'large'} 
           label="Large - 14" 
-          price={`$${prices.large}`}
+          price={`$${size["large"]}`}
           onPress={() => setSize('large')} 
           isLast={true}
         />

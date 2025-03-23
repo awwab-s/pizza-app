@@ -1,13 +1,15 @@
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from "react-native"
 import Icon from "react-native-vector-icons/Feather"
+import { useNavigation } from "@react-navigation/native"
 
 const { width } = Dimensions.get("window")
 const scale = (size) => (width / 375) * size
 
 const CartHeader = () => {
+  const navigation = useNavigation()
   return (
     <View style={styles.header}>
-      <TouchableOpacity style={styles.backButton}>
+      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
         <Icon name="chevron-left" size={scale(24)} color="#121212" />
       </TouchableOpacity>
       <Text style={styles.title}>Cart</Text>

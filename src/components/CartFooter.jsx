@@ -1,10 +1,12 @@
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from "react-native"
 import Icon from "react-native-vector-icons/Feather"
+import { useNavigation } from "@react-navigation/native"
 
 const { width, height } = Dimensions.get("window")
 const scale = (size) => (width / 375) * size
 
 const CartFooter = ({ totalBill }) => {
+  const navigation = useNavigation()
   return (
     <View style={styles.footer}>
       <View style={styles.totalContainer}>
@@ -12,7 +14,7 @@ const CartFooter = ({ totalBill }) => {
         <Text style={styles.totalAmount}>${totalBill}</Text>
       </View>
 
-      <TouchableOpacity style={styles.placeOrderButton}>
+      <TouchableOpacity style={styles.placeOrderButton} onPress={() => navigation.navigate("Checkout")}>
         <Text style={styles.buttonText}>Place Order</Text>
         <Icon name="chevron-right" size={scale(20)} color="#121212" />
       </TouchableOpacity>

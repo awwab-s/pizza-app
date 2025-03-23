@@ -1,12 +1,14 @@
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from "react-native"
+import { useNavigation } from "@react-navigation/native"
 
 const { width } = Dimensions.get("window")
 
-const Footer = ({ total }) => {
+const Footer = ({ total, pizza, size }) => {
+  const navigation = useNavigation()
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.addButton}>
-        <Text style={styles.addButtonText}>+ ADD TO CART</Text>
+      <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate("Cart", { pizza: pizza, price: total, size: size })}>
+        <Text style={styles.addButtonText} >+ ADD TO CART</Text>
       </TouchableOpacity>
 
       <View style={styles.totalContainer}>

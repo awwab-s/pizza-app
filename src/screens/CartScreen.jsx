@@ -3,13 +3,15 @@ import { View, StyleSheet, ScrollView, Dimensions } from "react-native"
 import CartHeader from "../components/CartHeader"
 import CartItem from "../components/CartItem"
 import CartFooter from "../components/CartFooter"
+import { useNavigation } from "@react-navigation/native"
 
 const { width, height } = Dimensions.get("window")
 
 // Scale factors based on design screen size
 const scale = (size) => (width / 375) * size
 
-const CartScreen = () => {
+const CartScreen = ({pizza, price, size}) => {
+  const navigation = useNavigation()
   const [cartItems, setCartItems] = useState([
     {
       id: 1,
