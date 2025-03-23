@@ -32,7 +32,7 @@ const BottomTabs = () => {
         headerShown: false,
         tabBarShowLabel: false,
         tabBarStyle: styles.bottomNavigation,
-        tabBarActiveTintColor: "#dd714e",
+        tabBarActiveTintColor: "#B55638",
         tabBarInactiveTintColor: "#868686",
         tabBarButton: (props) => <TouchableOpacity {...props} activeOpacity={1} />,
       }}
@@ -44,7 +44,7 @@ const BottomTabs = () => {
           tabBarIcon: ({ color, focused }) =>
             focused ? (
               <View style={styles.activeIconContainer}>
-                <Icon name="home" size={active} color="#dd714e" />
+                <Icon name="home" size={active} color="#B55638" />
               </View>
             ) : (
               <Icon name="home" size={inactive} color={color} />
@@ -58,7 +58,7 @@ const BottomTabs = () => {
           tabBarIcon: ({ color, focused }) =>
             focused ? (
               <View style={styles.activeIconContainer}>
-                <Cart name="cart-outline" size={active + width * 0.015} color="#dd714e" />
+                <Cart name="cart-outline" size={active + width * 0.015} color="#B55638" />
               </View>
             ) : (
               <Cart name="cart-outline" size={inactive + width * 0.013} color={color} />
@@ -72,7 +72,7 @@ const BottomTabs = () => {
           tabBarIcon: ({ color, focused }) =>
             focused ? (
               <View style={styles.activeIconContainer}>
-                <Icon name="search" size={active} color="#dd714e" />
+                <Icon name="search" size={active} color="#B55638" />
               </View>
             ) : (
               <Icon name="search" size={inactive} color={color} />
@@ -86,7 +86,7 @@ const BottomTabs = () => {
           tabBarIcon: ({ color, focused }) =>
             focused ? (
               <View style={styles.activeIconContainer}>
-                <Icon name="heart" size={active} color="#dd714e" />
+                <Icon name="heart" size={active} color="#B55638" />
               </View>
             ) : (
               <Icon name="heart" size={inactive} color={color} />
@@ -100,7 +100,7 @@ const BottomTabs = () => {
           tabBarIcon: ({ color, focused }) =>
             focused ? (
               <View style={styles.activeIconContainer}>
-                <Icon name="user" size={active} color="#dd714e" />
+                <Icon name="user" size={active} color="#B55638" />
               </View>
             ) : (
               <Icon name="user" size={inactive} color={color} />

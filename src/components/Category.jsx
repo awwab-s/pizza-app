@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
     },
     categoryButtonActive: {
-        backgroundColor: "#dd714e",
+        backgroundColor: "#B55638",
         paddingHorizontal: width * 0.024,
         paddingVertical: height * 0.012,
         borderRadius: width * 0.05,

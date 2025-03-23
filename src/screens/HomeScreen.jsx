@@ -10,28 +10,28 @@ const { width, height } = Dimensions.get('window');
 const PizzaItem = ({ imgURL, name, price, discountText }) => {
   return (
     <View style={styles.pizzaItem}>
-            <Image source={imgURL} style={styles.pizzaImage} />
-            <View style={styles.pizzaDetails}>
-              <View style={styles.pizzaNameContainer}>
-                <Text style={styles.pizzaName}>{name}</Text>
-                <TouchableOpacity>
-                  <Icon name="heart" size={height * 0.024} color="#868686" />
-                </TouchableOpacity>
-              </View>
-              
-              <View style={styles.priceContainer}>
-                <View style={styles.priceWrapper}>
-                  <Text style={styles.price}>{price}</Text>
-                  <View style={styles.discountBadge}>
-                    <Text style={styles.discountText}>{discountText}</Text>
-                  </View>
-                </View>
-                <TouchableOpacity style={styles.addButton}>
-                  <Icon name="plus" size={height * 0.02} color="#ffffff" />
-                </TouchableOpacity>
-              </View>
+      <Image source={imgURL} style={styles.pizzaImage} />
+      <View style={styles.pizzaDetails}>
+        <View style={styles.pizzaNameContainer}>
+          <Text style={styles.pizzaName}>{name}</Text>
+          <TouchableOpacity>
+            <Icon name="heart" size={height * 0.024} color="#868686" />
+          </TouchableOpacity>
+        </View>
+        
+        <View style={styles.priceContainer}>
+          <View style={styles.priceWrapper}>
+            <Text style={styles.price}>{price}</Text>
+            <View style={styles.discountBadge}>
+              <Text style={styles.discountText}>{discountText}</Text>
             </View>
           </View>
+          <TouchableOpacity style={styles.addButton}>
+            <Icon name="plus" size={height * 0.02} color="#ffffff" />
+          </TouchableOpacity>
+        </View>
+      </View>
+    </View>
   )
 }
 
@@ -45,7 +45,7 @@ const HomeScreen = () => {
           <View>
             <Text style={styles.locationLabel}>Location</Text>
             <View style={styles.locationContainer}>
-              <Ionicons name="location-sharp" size={height * 0.030} color="#b55638" style={{marginRight: 5}} />
+              <Ionicons name="location-sharp" size={height * 0.030} color="#B55638" style={{marginRight: 5}} />
               <Text style={styles.locationText}>New York, USA</Text>
               <Icon name="chevron-down" size={height * 0.020} color="#0f0e0d" />
             </View>
@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
     marginTop: height * 0.004,
   },
   orderButton: {
-    backgroundColor: "#dd714e",
+    backgroundColor: "#B55638",
     paddingHorizontal: width * 0.024,
     paddingVertical: height * 0.012,
     borderRadius: height * 0.030,
@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
   seeAllText: {
     fontSize: height * 0.016,
     fontWeight: "500",
-    color: "#dd714e",
+    color: "#B55638",
   },
 
   pizzaItemsContainer: {
@@ -273,7 +273,7 @@ const styles = StyleSheet.create({
     color: "#0f0e0d",
   },
   discountBadge: {
-    backgroundColor: "#dd714e",
+    backgroundColor: "#B55638",
     paddingHorizontal: height * 0.008,
     paddingVertical: height * 0.004,
     borderRadius: height * 0.030,
