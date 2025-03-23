@@ -171,7 +171,7 @@ const HomeScreen = () => {
             </TouchableOpacity>
           </View>
           <View style={styles.notificationContainer}>
-            <Ionicons name="cart" size={height * 0.04} color="#0f0e0d" />
+            <Ionicons name="cart-outline" size={height * 0.04} color="#0f0e0d" />
             
           </View>
         </View>
