@@ -17,6 +17,7 @@ import FavoritesScreen from "./src/screens/FavoritesScreen";
 import ProfileScreen from "./src/screens/ProfileScreen";
 import { useEffect } from "react";
 import uploadPizzas from "./src/data/uploadPizzas";
+import DetailsScreen from "./src/screens/DetailsScreen";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -112,9 +113,9 @@ const BottomTabs = () => {
 
 const App = () => {
 
-  useEffect(() => {
-    uploadPizzas();
-  }, []);
+  // useEffect(() => {
+  //   uploadPizzas();
+  // }, []);
 
   return (
     <NavigationContainer>
@@ -126,6 +127,7 @@ const App = () => {
         <Stack.Screen name="Main" component={BottomTabs} />
       </Stack.Navigator>
     </NavigationContainer>
+    // <DetailsScreen />
   )
 }
 
