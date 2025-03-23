@@ -30,8 +30,10 @@ const SignUpScreen = ({ navigation }) => {
         uid: user.uid,
         name: username,
         email: user.email,
+        address: "",
         photoURL: user.photoURL || "",
         createdAt: new Date(),
+        favorites: [],
       });
 
       console.log("User account stored in Firestore!");

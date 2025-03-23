@@ -46,8 +46,10 @@ const SignInScreen = ({ navigation }) => {
           uid: user.uid,
           name: user.displayName || user.name,
           email: user.email || user.email,
+          address: "",
           photoURL: user.photoURL || "",
           createdAt: new Date(),
+          favorites: [],
         });
         console.log("User added to Firestore!");
         Alert.alert("Success", "User account created!");

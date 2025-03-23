@@ -15,6 +15,8 @@ import CartScreen from "./src/screens/CartScreen";
 import SearchScreen from "./src/screens/SearchScreen";
 import FavoritesScreen from "./src/screens/FavoritesScreen";
 import ProfileScreen from "./src/screens/ProfileScreen";
+import { useEffect } from "react";
+import uploadPizzas from "./src/data/uploadPizzas";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -109,6 +111,11 @@ const BottomTabs = () => {
 }
 
 const App = () => {
+
+  useEffect(() => {
+    uploadPizzas();
+  }, []);
+
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Welcome">

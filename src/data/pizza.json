@@ -1,0 +1,168 @@
+[
+  {
+    "id": 1,
+    "name": "Cheese",
+    "description": "A classic cheese pizza with a rich tomato base and a generous layer of melted mozzarella cheese.",
+    "imageURL": "https://drive.google.com/file/d/1sF-fF9dQJXSkxfEubfx310v0tNgUHoDo/view?usp=drive_link",
+    "size": {
+      "small": 699,
+      "medium": 999,
+      "large": 1299
+    },
+    "crust": ["Thin", "Thick", "Stuffed"],
+    "category": ["Classic"],
+    "basePrice": 999,
+    "rating": 4.2
+  },
+  {
+    "id": 2,
+    "name": "Vegetable",
+    "description": "A fresh and flavorful combination of bell peppers, onions, mushrooms, black olives, and tomatoes, topped with a generous layer of mozzarella cheese.",
+    "imageURL": "https://drive.google.com/file/d/1vMwXI0edYNFoCF1ilN6pidMVbQRIeS2A/view?usp=drive_link",
+    "size": {
+      "small": 799,
+      "medium": 1099,
+      "large": 1399
+    },
+    "crust": ["Thin", "Thick", "Stuffed"],
+    "category": ["Classic", "Vegetable"],
+    "basePrice": 1099,
+    "rating": 4.3
+  },
+  {
+    "id": 3,
+    "name": "Pepperoni",
+    "description": "A flavorful pizza topped with zesty pepperoni slices over a bed of melted mozzarella cheese and a tangy tomato sauce.",
+    "imageURL": "https://drive.google.com/file/d/168r-9FmDHotDu8LWwqhwfIf07ej9lENj/view?usp=drive_link",
+    "size": {
+      "small": 899,
+      "medium": 1299,
+      "large": 1599
+    },
+    "crust": ["Thin", "Thick", "Stuffed"],
+    "category": ["Classic","Chicken"],
+    "basePrice": 1099,
+    "rating": 4.7
+  },
+  {
+    "id": 4,
+    "name": "BBQ Chicken",
+    "description": "Tender grilled chicken marinated in smoky BBQ sauce, topped with red onions, green peppers, and melted cheese.",
+    "imageURL": "https://drive.google.com/file/d/12j4QwosxQMFeJuYM-qmQu-1em60YBy_q/view?usp=drive_link",
+    "size": {
+      "small": 999,
+      "medium": 1199,
+      "large": 1499
+    },
+    "crust": ["Thin", "Thick", "Stuffed"],
+    "category": ["Vegetable", "Chicken"],
+    "basePrice": 1199,
+    "rating": 4.6
+  },
+  {
+    "id": 5,
+    "name": "Mediterranean",
+    "description": "A delicious combination of olives, feta cheese, tomatoes, red onions, and fresh basil, topped with a drizzle of olive oil.",
+    "imageURL": "https://drive.google.com/file/d/1ouECBi6GsFHHH1IRyhQuMBFiRD4NEq-L/view?usp=drive_link",
+    "size": {
+      "small": 899,
+      "medium": 1199,
+      "large": 1499
+    },
+    "crust": ["Thin", "Thick", "Stuffed"],
+    "category": ["Special", "Vegetable"],
+    "basePrice": 1199,
+    "rating": 4.5
+  },
+  {
+    "id": 6,
+    "name": "Chicken and Cheese",
+    "description": "A creamy mix of shredded chicken and mozzarella cheese, topped with a blend of Italian herbs for a rich and flavorful experience.",
+    "imageURL": "https://drive.google.com/file/d/18bNw-PNjCesixwuEYOPOreTHEzDBJfAY/view?usp=drive_link",
+    "size": {
+      "small": 799,
+      "medium": 1099,
+      "large": 1399
+    },
+    "crust": ["Thin", "Thick", "Stuffed"],
+    "category": ["Chicken"],
+    "basePrice": 1099,
+    "rating": 4.6
+  },
+  {
+    "id": 7,
+    "name": "Chicken Tikka",
+    "description": "A desi-style pizza with spicy chicken tikka chunks, onions, and green chilies, blended with tangy tomato sauce and cheese.",
+    "imageURL": "https://drive.google.com/file/d/1lSPZVpHTyHmuQm-q2f44iMoUxwH2mopY/view?usp=drive_link",
+    "size": {
+      "small": 899,
+      "medium": 1199,
+      "large": 1499
+    },
+    "crust": ["Thin", "Thick", "Stuffed"],
+    "category": ["Vegetable", "Chicken"],
+    "basePrice": 1199,
+    "rating": 4.7
+  },
+  {
+    "id": 8,
+    "name": "Ultimate",
+    "description": "The ultimate pizza loaded with a variety of toppings including pepperoni, grilled chicken, mushrooms, onions, and bell peppers.",
+    "imageURL": "https://drive.google.com/file/d/1e-e6KZFtnZPs7xAS-k4VUEo6YujIAvCF/view?usp=drive_link",
+    "size": {
+      "small": 999,
+      "medium": 1399,
+      "large": 1799
+    },
+    "crust": ["Thin", "Thick", "Stuffed"],
+    "category": ["Special", "Vegetable", "Chicken"],
+    "basePrice": 1399,
+    "rating": 4.8
+  },
+  {
+    "id": 9,
+    "name": "Continental",
+    "description": "A European-inspired pizza with a light tomato base, roasted chicken, mushrooms, olives, and a hint of oregano.",
+    "imageURL": "https://drive.google.com/file/d/1NX1IvzyGA8vft0i8m4h53uFVU5pW_O9W/view?usp=drive_link",
+    "size": {
+      "small": 799,
+      "medium": 1199,
+      "large": 1499
+    },
+    "crust": ["Thin", "Thick", "Stuffed"],
+    "category": ["Vegetable", "Chicken"],
+    "basePrice": 1199,
+    "rating": 4.1
+  },
+  {
+    "id": 10,
+    "name": "Chicken Alfredo",
+    "description": "A rich and creamy pizza with Alfredo sauce, grilled chicken, mushrooms, and a blend of mozzarella and parmesan cheese.",
+    "imageURL": "https://drive.google.com/file/d/1RaH-J1zeGR7dCyU_IA4hnT1jM3XnCGNH/view?usp=drive_link",
+    "size": {
+      "small": 899,
+      "medium": 1299,
+      "large": 1599
+    },
+    "crust": ["Thin", "Thick", "Stuffed"],
+    "category": ["Special", "Chicken"],
+    "basePrice": 1299,
+    "rating": 4.3
+  },
+  {
+    "id": 11,
+    "name": "Mushroom",
+    "description": "A simple yet delicious pizza loaded with fresh mushrooms, mozzarella cheese, and a drizzle of garlic-infused olive oil.",
+    "imageURL": "https://drive.google.com/file/d/1xbRrQkVjCpt0cdw-WbRV3hoiycGzFqIf/view?usp=drive_link",
+    "size": {
+      "small": 799,
+      "medium": 1099,
+      "large": 1399
+    },
+    "crust": ["Thin", "Thick", "Stuffed"],
+    "category": ["Vegetable"],
+    "basePrice": 1099,
+    "rating": 4.2
+  }
+]
+
