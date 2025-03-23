@@ -1,10 +1,39 @@
 import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet, ScrollView, SafeAreaView, StatusBar, Dimensions } from "react-native"
 import Icon from "react-native-vector-icons/Feather"
 import MaterialIcons from "react-native-vector-icons/MaterialIcons"
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import Search from "../components/Search"
 import Category from "../components/Category"
 
 const { width, height } = Dimensions.get('window');
+
+const PizzaItem = ({ imgURL, name, price, discountText }) => {
+  return (
+    <View style={styles.pizzaItem}>
+            <Image source={imgURL} style={styles.pizzaImage} />
+            <View style={styles.pizzaDetails}>
+              <View style={styles.pizzaNameContainer}>
+                <Text style={styles.pizzaName}>{name}</Text>
+                <TouchableOpacity>
+                  <Icon name="heart" size={height * 0.024} color="#868686" />
+                </TouchableOpacity>
+              </View>
+              
+              <View style={styles.priceContainer}>
+                <View style={styles.priceWrapper}>
+                  <Text style={styles.price}>{price}</Text>
+                  <View style={styles.discountBadge}>
+                    <Text style={styles.discountText}>{discountText}</Text>
+                  </View>
+                </View>
+                <TouchableOpacity style={styles.addButton}>
+                  <Icon name="plus" size={height * 0.02} color="#ffffff" />
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+  )
+}
 
 const HomeScreen = () => {
   return (
@@ -16,13 +45,13 @@ const HomeScreen = () => {
           <View>
             <Text style={styles.locationLabel}>Location</Text>
             <View style={styles.locationContainer}>
-              <Icon name="map-pin" size={height * 0.020} color="#b55638" />
+              <Ionicons name="location-sharp" size={height * 0.030} color="#b55638" style={{marginRight: 5}} />
               <Text style={styles.locationText}>New York, USA</Text>
               <Icon name="chevron-down" size={height * 0.020} color="#0f0e0d" />
             </View>
           </View>
           <View style={styles.notificationContainer}>
-            <Icon name="shopping-cart" size={height * 0.030} color="#0f0e0d" />
+            <Ionicons name="cart" size={height * 0.04} color="#0f0e0d" />
             
           </View>
         </View>
@@ -56,66 +85,11 @@ const HomeScreen = () => {
         {/* Pizza Items */}
         <View style={styles.pizzaItemsContainer}>
           {/* Pepperoni Pizza */}
-          <View style={styles.pizzaItem}>
-            <Image source={require('../assets/welcome_pizza.png')} style={styles.pizzaImage} />
-            <View style={styles.pizzaDetails}>
-              <View style={styles.pizzaNameContainer}>
-                <Text style={styles.pizzaName}>Pepperoni Pizza</Text>
-                <TouchableOpacity>
-                  <Icon name="heart" size={height * 0.024} color="#868686" />
-                </TouchableOpacity>
-              </View>
-              <Text style={styles.offerValidity}>Offer valid today only</Text>
-              <View style={styles.pizzaInfoContainer}>
-                <Text style={styles.deliveryTime}>20min</Text>
-                <Text style={styles.dot}>•</Text>
-                <Text style={styles.rating}>4.5</Text>
-                <MaterialIcons name="star" size={height * 0.016} color="#fcca18" />
-              </View>
-              <View style={styles.priceContainer}>
-                <View style={styles.priceWrapper}>
-                  <Text style={styles.price}>$10.00</Text>
-                  <View style={styles.discountBadge}>
-                    <Text style={styles.discountText}>25% Off</Text>
-                  </View>
-                </View>
-                <TouchableOpacity style={styles.addButton}>
-                  <Icon name="plus" size={height * 0.02} color="#ffffff" />
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
+          <PizzaItem imgURL={require('../assets/welcome_pizza.png')} name="Pepperoni Pizza" price="$10.00" discountText="25% Off" />
 
           {/* Margherita Pizza */}
-          <View style={styles.pizzaItem}>
-            <Image source={require('../assets/welcome_pizza.png')} style={styles.pizzaImage} />
-            <View style={styles.pizzaDetails}>
-              <View style={styles.pizzaNameContainer}>
-                <Text style={styles.pizzaName}>Margherita Pizza</Text>
-                <TouchableOpacity>
-                  <Icon name="heart" size={height * 0.024} color="#868686" />
-                </TouchableOpacity>
-              </View>
-              <Text style={styles.offerValidity}>Offer valid today only</Text>
-              <View style={styles.pizzaInfoContainer}>
-                <Text style={styles.deliveryTime}>30min</Text>
-                <Text style={styles.dot}>•</Text>
-                <Text style={styles.rating}>4.6</Text>
-                <MaterialIcons name="star" size={height * 0.016} color="#fcca18" />
-              </View>
-              <View style={styles.priceContainer}>
-                <View style={styles.priceWrapper}>
-                  <Text style={styles.price}>$8.00</Text>
-                  <View style={styles.discountBadge}>
-                    <Text style={styles.discountText}>20% Off</Text>
-                  </View>
-                </View>
-                <TouchableOpacity style={styles.addButton}>
-                  <Icon name="plus" size={height * 0.02} color="#ffffff" />
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
+          <PizzaItem imgURL={require('../assets/welcome_pizza.png')} name="Margherita Pizza" price="$8.00" discountText="20% Off" />
+          
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -287,7 +261,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginTop: height * 0.008,
+    marginTop: height * 0.02,
   },
   priceWrapper: {
     flexDirection: "row",

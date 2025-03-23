@@ -1,8 +1,9 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { View, StyleSheet, Dimensions } from "react-native";
+import { View, StyleSheet, TouchableOpacity, Dimensions } from "react-native";
 import Icon from "react-native-vector-icons/Feather";
+import Cart from "react-native-vector-icons/Ionicons";
 
 // Import screens
 import SplashScreen from "./src/screens/SplashScreen";
@@ -30,6 +31,7 @@ const BottomTabs = () => {
         tabBarStyle: styles.bottomNavigation,
         tabBarActiveTintColor: "#dd714e",
         tabBarInactiveTintColor: "#868686",
+        tabBarButton: (props) => <TouchableOpacity {...props} activeOpacity={1} />,
       }}
     >
       <Tab.Screen
@@ -53,10 +55,10 @@ const BottomTabs = () => {
           tabBarIcon: ({ color, focused }) =>
             focused ? (
               <View style={styles.activeIconContainer}>
-                <Icon name="shopping-cart" size={active} color="#dd714e" />
+                <Cart name="cart-outline" size={active + width * 0.015} color="#dd714e" />
               </View>
             ) : (
-              <Icon name="shopping-cart" size={inactive} color={color} />
+              <Cart name="cart-outline" size={inactive + width * 0.013} color={color} />
             ),
         }}
       />
@@ -123,8 +125,8 @@ const App = () => {
 const styles = StyleSheet.create({
   activeIconContainer: {
     backgroundColor: "#ffffff",
-    width: 50,
-    height: 50,
+    width: width * 0.13,
+    height: width * 0.13,
     borderRadius: 25,
     justifyContent: "center",
     alignItems: "center",
@@ -134,14 +136,16 @@ const styles = StyleSheet.create({
   },
 
   bottomNavigation: {
-    position: "absolute",
-    bottom: height * 0.01,
-    marginLeft: width * 0.01,
-    marginRight: width * 0.01,
+    height: height * 0.09,
     backgroundColor: "#0f0e0d",
     flexDirection: "row",
     alignItems: "center",
-    borderRadius: 35,
+    paddingBottom: height * 0.04,
+    // borderTopLeftRadius: 35,
+    // borderTopRightRadius: 35,
+    // borderRadius: 35,
+    // marginHorizontal: width * 0.01,
+    // marginBottom: height * 0.01,
   },
   navItem: {
     alignItems: "center",
