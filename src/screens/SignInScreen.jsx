@@ -4,7 +4,7 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { getAuth, signInWithEmailAndPassword, signInWithCredential, GoogleAuthProvider } from "firebase/auth";
 import { collection, doc, setDoc, getDoc } from "firebase/firestore";
 import { auth, WEB_CLIENT_ID, db } from '../../firebaseConfig';
-import { create } from 'react-test-renderer';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width, height } = Dimensions.get('window');
 
@@ -57,7 +57,11 @@ const SignInScreen = ({ navigation }) => {
         console.log("User already exists in Firestore");
       }
 
-      navigation.navigate("Main"); // Replace with your target screen
+      // Save user data in AsyncStorage
+      await AsyncStorage.setItem("user", JSON.stringify(user));
+      console.log("User saved to AsyncStorage!");
+
+      navigation.navigate("Main");
     } catch (error) {
       console.log('Google Sign-In Error:', error);
     }
@@ -76,6 +80,10 @@ const SignInScreen = ({ navigation }) => {
 
       console.log("Sign-In Successful!");
       Alert.alert("Success", "User logged in!");
+
+      // Save user data in AsyncStorage
+      await AsyncStorage.setItem("user", JSON.stringify(user));
+      console.log("User saved to AsyncStorage!");
 
       navigation.navigate("Main");
     } catch (error) {

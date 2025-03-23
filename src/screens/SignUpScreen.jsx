@@ -4,6 +4,7 @@ import Icon from "react-native-vector-icons/Feather";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { auth, db } from '../../firebaseConfig';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width, height } = Dimensions.get('window');
 
@@ -37,6 +38,11 @@ const SignUpScreen = ({ navigation }) => {
       });
 
       console.log("User account stored in Firestore!");
+
+      // Store user data in AsyncStorage
+      await AsyncStorage.setItem('user', JSON.stringify(user));
+      console.log("User saved to AsyncStorage!");
+
       Alert.alert("Success", "Account created successfully!");
 
       navigation.navigate("Main"); // Navigate to the main screen

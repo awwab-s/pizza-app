@@ -1,9 +1,39 @@
 import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity, Dimensions } from 'react-native'
-import React from 'react'
+import React, { useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../../firebaseConfig";
 
 const { width, height } = Dimensions.get('window');
 
 const WelcomeScreen = ({ navigation }) => {
+  useEffect(() => {
+    const checkUserSession = async () => {
+      const storedUser = await AsyncStorage.getItem("user");
+
+      if (storedUser) {
+        console.log('User found in AsyncStorage:', storedUser);
+        navigation.replace("Main"); // Redirect to home if user exists
+      } else {
+        console.log('No user found in AsyncStorage. Staying on Welcome screen.');
+      }
+    };
+
+    checkUserSession();
+
+    // Firebase listener for real-time auth state changes
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log('Firebase Auth user detected:', user.email);
+        navigation.replace("Main");
+      } else {
+        console.log('No authenticated user. Staying on Welcome screen.');
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.logoContainer}>

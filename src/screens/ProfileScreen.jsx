@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
-import { View, Text, StyleSheet, SafeAreaView, Image, TouchableOpacity, Alert } from "react-native"
+import { View, Text, StyleSheet, SafeAreaView, Image, TouchableOpacity, Alert, ActivityIndicator } from "react-native"
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { Dimensions } from "react-native";
 import { auth, db } from "../../firebaseConfig";
 import { signOut } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const { width, height } = Dimensions.get("window");
 
@@ -48,8 +49,10 @@ const ProfileScreen = () => {
           text: "Yes",
           onPress: async () => {
             try {
+              await AsyncStorage.removeItem("user");
+              console.log("User removed from AsyncStorage!");
               await signOut(auth);
-              navigation.replace("Welcome");
+              navigation.replace("SignIn");
             } catch (error) {
               console.error("Error signing out:", error);
             }
@@ -58,6 +61,14 @@ const ProfileScreen = () => {
       ]
     );
   };
+
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <ActivityIndicator size="large" color="#B55638" style={{ marginTop: height * 0.3 }} />
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.container}>
