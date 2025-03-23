@@ -12,7 +12,7 @@ const { width, height } = Dimensions.get("window");
 
 const ProfileScreen = () => {
   const [userData, setUserData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
   const [isGuest, setIsGuest] = useState(false);
 
   const navigation = useNavigation();
@@ -30,27 +30,26 @@ const ProfileScreen = () => {
     checkGuestUser();
   }, []);
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        if (!isGuest) {
-          const user = auth.currentUser;
-          if (user) {
-            const userDoc = await getDoc(doc(db, "users", user.uid));
-            if (userDoc.exists()) {
-              setUserData(userDoc.data());
-            }
+  const fetchUserData = async () => {
+    try {
+      if (!isGuest) {
+        const user = auth.currentUser;
+        if (user) {
+          const userDoc = await getDoc(doc(db, "users", user.uid));
+          if (userDoc.exists()) {
+            setUserData(userDoc.data());
+            console.log(userDoc.data());
           }
         }
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      } finally {
-        setLoading(false);
       }
-    };
-  
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
+
+  useEffect(() => {
     fetchUserData();
-  }, [isGuest]);
+  }, []);
 
   const handleSignOut = async () => {
     Alert.alert(
@@ -78,21 +77,30 @@ const ProfileScreen = () => {
     );
   };
 
-  if (loading) {
-    return (
-      <SafeAreaView style={styles.container}>
-        <ActivityIndicator size="large" color="#B55638" style={{ marginTop: height * 0.3 }} />
-      </SafeAreaView>
-    );
-  }
+  const handleRefresh = () => {
+    fetchUserData(); // Refresh user data when the button is pressed
+  };
+
+  // if (loading) {
+  //   return (
+  //     <SafeAreaView style={styles.container}>
+  //       <ActivityIndicator size="large" color="#B55638" style={{ marginTop: height * 0.3 }} />
+  //     </SafeAreaView>
+  //   );
+  // }
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Profile</Text>
-        <TouchableOpacity onPress={handleSignOut} style={styles.signOutButton}>
-          <Icon name="logout" size={24} color="#FFF" />
-        </TouchableOpacity>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity onPress={handleRefresh} style={styles.refreshButton}>
+              <Icon name="refresh" size={24} color="#FFF" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleSignOut} style={styles.signOutButton}>
+            <Icon name="logout" size={24} color="#FFF" />
+          </TouchableOpacity>
+        </View>
       </View>
       <View style={styles.divider} />
       <View style={styles.userInfo}>
@@ -106,11 +114,7 @@ const ProfileScreen = () => {
         </View>
         <View style={styles.infoRow}>
           <Icon name="location-on" style={styles.icon} />
-          {userData?.address ? (
-            <Text style={[styles.infoText, styles.address]}>{userData.address}</Text>
-          ) : (
-            <Text style={styles.noAddress}>No address set!</Text>
-          )}
+          <Text style={[styles.infoText, styles.address]}>{userData?.address || 'No Address Set!'}</Text>
         </View>
       </View>
       <View style={styles.divider} />
@@ -157,7 +161,21 @@ const styles = StyleSheet.create({
     alignItems: "center", 
     marginBottom: 10
   },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 10
+  },
   signOutButton: {
+    backgroundColor: "#B55638",
+    width: 45,
+    height: 45,
+    borderRadius: 40,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  refreshButton: {
     backgroundColor: "#B55638",
     width: 45,
     height: 45,
@@ -202,7 +220,7 @@ const styles = StyleSheet.create({
   },
   address: { 
     fontSize: 14, 
-    color: "#777" 
+    color: "#777",
   },
   infoRow: {
     flexDirection: "row",
