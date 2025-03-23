@@ -8,26 +8,14 @@ const { width, height } = Dimensions.get('window');
 
 const WelcomeScreen = ({ navigation }) => {
   useEffect(() => {
-    const checkUserSession = async () => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       const storedUser = await AsyncStorage.getItem("user");
 
-      if (storedUser && storedUser !== "guest") {
-        console.log('User found in AsyncStorage:', storedUser);
-        navigation.replace("Main"); // Redirect to home if user exists
+      if (user && storedUser !== "guest") {
+        console.log("Firebase Auth user detected:", user.email, "Redirecting to Home screen.");
+        navigation.replace("Main"); // Redirect to home if not guest
       } else {
-        console.log('No user found in AsyncStorage. Staying on Welcome screen.');
-      }
-    };
-
-    checkUserSession();
-
-    // Firebase listener for real-time auth state changes
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        console.log('Firebase Auth user detected:', user.email);
-        navigation.replace("Main");
-      } else {
-        console.log('No authenticated user. Staying on Welcome screen.');
+        console.log("No authenticated user active. Staying on Welcome screen.");
       }
     });
 

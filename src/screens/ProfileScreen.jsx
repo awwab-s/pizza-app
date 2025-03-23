@@ -13,29 +13,33 @@ const { width, height } = Dimensions.get("window");
 const ProfileScreen = () => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isGuest, setIsGuest] = useState(false);
 
   const navigation = useNavigation();
 
   useEffect(() => {
-    const checkAccess = async () => {
+    const checkGuestUser = async () => {
       const user = await AsyncStorage.getItem("user");
       if (user === "guest") {
+        setIsGuest(true);
         Alert.alert("Login Required", "Please sign in to view your profile.");
         navigation.replace("Main");
       }
     };
 
-    checkAccess();
+    checkGuestUser();
   }, []);
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const user = auth.currentUser;
-        if (user) {
-          const userDoc = await getDoc(doc(db, "users", user.uid));
-          if (userDoc.exists()) {
-            setUserData(userDoc.data());
+        if (!isGuest) {
+          const user = auth.currentUser;
+          if (user) {
+            const userDoc = await getDoc(doc(db, "users", user.uid));
+            if (userDoc.exists()) {
+              setUserData(userDoc.data());
+            }
           }
         }
       } catch (error) {
@@ -44,19 +48,9 @@ const ProfileScreen = () => {
         setLoading(false);
       }
     };
-
-    // Only fetch user data if NOT a guest
-    const checkAndFetch = async () => {
-      const user = await AsyncStorage.getItem("user");
-      if (user !== "guest") {
-        fetchUserData();
-      } else {
-        setLoading(false);
-      }
-    };
-
-    checkAndFetch();
-  }, []);
+  
+    fetchUserData();
+  }, [isGuest]);
 
   const handleSignOut = async () => {
     Alert.alert(

@@ -1,7 +1,9 @@
+import React, { useState, useEffect } from "react"
 import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet, ScrollView, SafeAreaView, StatusBar, Dimensions } from "react-native"
 import Icon from "react-native-vector-icons/Feather"
 import MaterialIcons from "react-native-vector-icons/MaterialIcons"
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import Search from "../components/Search"
 import Category from "../components/Category"
 
@@ -36,6 +38,20 @@ const PizzaItem = ({ imgURL, name, price, discountText }) => {
 }
 
 const HomeScreen = () => {
+  const [location, setLocation] = useState("Select a location");
+  const [isGuest, setIsGuest] = useState(false);
+
+  useEffect(() => {
+    const checkGuestUser = async () => {
+      const user = await AsyncStorage.getItem("user");
+      if (user === "guest") {
+        setIsGuest(true);
+      }
+    };
+
+    checkGuestUser();
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
@@ -44,11 +60,15 @@ const HomeScreen = () => {
         <View style={styles.header}>
           <View>
             <Text style={styles.locationLabel}>Location</Text>
-            <View style={styles.locationContainer}>
+            <TouchableOpacity
+              disabled={isGuest} // Disable button for guests
+              onPress={() => navigation.navigate("MapScreen", { setLocation })}
+              style={{ flexDirection: "row", alignItems: "center", opacity: isGuest ? 0.5 : 1 }}
+            >
               <Ionicons name="location-sharp" size={height * 0.030} color="#B55638" style={{marginRight: 5}} />
               <Text style={styles.locationText}>New York, USA</Text>
               <Icon name="chevron-down" size={height * 0.020} color="#0f0e0d" />
-            </View>
+            </TouchableOpacity>
           </View>
           <View style={styles.notificationContainer}>
             <Ionicons name="cart" size={height * 0.04} color="#0f0e0d" />
