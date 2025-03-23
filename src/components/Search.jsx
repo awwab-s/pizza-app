@@ -28,17 +28,17 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#f8f8f8",
-    borderRadius: height * 0.030,
+    borderRadius: 35,
     paddingHorizontal: width * 0.020,
-    paddingVertical: height * 0.012,
+    paddingVertical: height * 0.01,
   },
   searchIcon: {
-    marginLeft: width * 0.04,
+    marginLeft: width * 0.03,
   },
   searchInput: {
     flex: 1,
     fontSize: width * 0.04,
-    color: "#868686",
+    marginLeft: width * 0.01,
   },
 })
 

@@ -11,7 +11,7 @@ const WelcomeScreen = ({ navigation }) => {
     const checkUserSession = async () => {
       const storedUser = await AsyncStorage.getItem("user");
 
-      if (storedUser) {
+      if (storedUser && storedUser !== "guest") {
         console.log('User found in AsyncStorage:', storedUser);
         navigation.replace("Main"); // Redirect to home if user exists
       } else {
@@ -33,6 +33,12 @@ const WelcomeScreen = ({ navigation }) => {
 
     return () => unsubscribe();
   }, []);
+
+  const handleGuestLogin = async () => {
+    await AsyncStorage.setItem('user', 'guest');
+    console.log('Guest user saved to AsyncStorage!');
+    navigation.navigate('Main');
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -61,7 +67,7 @@ const WelcomeScreen = ({ navigation }) => {
           <Text style={styles.signUpButtonText}>Sign me up</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.guestButton} onPress={() => navigation.navigate('Main')}>
+        <TouchableOpacity style={styles.guestButton} onPress={handleGuestLogin}>
           <Text style={styles.guestButtonText}>Continue as Guest</Text>
         </TouchableOpacity>
       </View>

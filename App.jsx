@@ -1,3 +1,7 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useState, useEffect } from "react";
+import { Alert } from "react-native";
+
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -15,7 +19,6 @@ import CartScreen from "./src/screens/CartScreen";
 import SearchScreen from "./src/screens/SearchScreen";
 import FavoritesScreen from "./src/screens/FavoritesScreen";
 import ProfileScreen from "./src/screens/ProfileScreen";
-import { useEffect } from "react";
 import uploadPizzas from "./src/data/uploadPizzas";
 import DetailsScreen from "./src/screens/DetailsScreen";
 

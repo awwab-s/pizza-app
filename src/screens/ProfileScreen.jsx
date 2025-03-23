@@ -17,6 +17,18 @@ const ProfileScreen = () => {
   const navigation = useNavigation();
 
   useEffect(() => {
+    const checkAccess = async () => {
+      const user = await AsyncStorage.getItem("user");
+      if (user === "guest") {
+        Alert.alert("Login Required", "Please sign in to view your profile.");
+        navigation.replace("Main");
+      }
+    };
+
+    checkAccess();
+  }, []);
+
+  useEffect(() => {
     const fetchUserData = async () => {
       try {
         const user = auth.currentUser;
@@ -33,7 +45,17 @@ const ProfileScreen = () => {
       }
     };
 
-    fetchUserData();
+    // Only fetch user data if NOT a guest
+    const checkAndFetch = async () => {
+      const user = await AsyncStorage.getItem("user");
+      if (user !== "guest") {
+        fetchUserData();
+      } else {
+        setLoading(false);
+      }
+    };
+
+    checkAndFetch();
   }, []);
 
   const handleSignOut = async () => {
@@ -41,10 +63,7 @@ const ProfileScreen = () => {
       "Sign Out",
       "Are you sure you want to sign out?",
       [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
+        { text: "Cancel", style: "cancel" },
         {
           text: "Yes",
           onPress: async () => {
@@ -52,7 +71,10 @@ const ProfileScreen = () => {
               await AsyncStorage.removeItem("user");
               console.log("User removed from AsyncStorage!");
               await signOut(auth);
-              navigation.replace("SignIn");
+              navigation.reset({
+                index: 0,
+                routes: [{ name: "Welcome" }],
+              });
             } catch (error) {
               console.error("Error signing out:", error);
             }

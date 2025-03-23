@@ -8,16 +8,16 @@ const Category = () => {
       <View style={{paddingHorizontal: width * 0.024,}}>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoriesContainer}>
             <TouchableOpacity style={styles.categoryButtonActive}>
-                <Text style={styles.categoryButtonTextActive}>All Pizzas</Text>
+                <Text style={styles.categoryButtonTextActive}>All</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.categoryButton}>
-                <Text style={styles.categoryButtonText}>Vegetarian</Text>
+                <Text style={styles.categoryButtonText}>Classic</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.categoryButton}>
-                <Text style={styles.categoryButtonText}>Specials</Text>
+                <Text style={styles.categoryButtonText}>Vegetable</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.categoryButton}>
-                <Text style={styles.categoryButtonText}>Specials</Text>
+                <Text style={styles.categoryButtonText}>Chicken</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.categoryButton}>
                 <Text style={styles.categoryButtonText}>Specials</Text>
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     },
     categoryButtonActive: {
         backgroundColor: "#B55638",
-        paddingHorizontal: width * 0.024,
+        paddingHorizontal: width * 0.03,
         paddingVertical: height * 0.012,
         borderRadius: width * 0.05,
         marginRight: width * 0.012,
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     },
     categoryButton: {
         backgroundColor: "#f8f8f8",
-        paddingHorizontal: width * 0.024,
+        paddingHorizontal: width * 0.03,
         paddingVertical: height * 0.012,
         borderRadius: width * 0.05,
         marginRight: width * 0.012,
