@@ -109,7 +109,7 @@ const CartScreen = ({pizza, price, size}) => {
         )}
       </ScrollView>
 
-      <CartFooter totalBill={totalBill} />
+      <CartFooter totalBill={totalBill} cartItems={cartItems} />
     </View>
   )
 }

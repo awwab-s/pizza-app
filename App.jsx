@@ -22,9 +22,12 @@ import ProfileScreen from "./src/screens/ProfileScreen";
 import DetailsScreen from "./src/screens/DetailsScreen";
 import PizzaOrderScreen from "./src/screens/PizzaOrderScreen";
 import CheckoutScreen from "./src/screens/CheckoutScreen";
+import DeliveryScreen from "./src/screens/DeliveryScreen";
+import OrderHistoryScreen from "./src/screens/OrderHistoryScreen";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+
 const { width, height } = Dimensions.get('window');
 const active = width * 0.08;
 const inactive = width * 0.06;
@@ -130,6 +133,8 @@ const App = () => {
         <Stack.Screen name="Cart" component={CartScreen} />
         <Stack.Screen name="PizzaOrder" component={PizzaOrderScreen} />
         <Stack.Screen name="Checkout" component={CheckoutScreen} />
+        <Stack.Screen name="Delivery" component={DeliveryScreen} />
+        <Stack.Screen name="OrderHistory" component={OrderHistoryScreen} />
         <Stack.Screen name="Main" component={BottomTabs} />
       </Stack.Navigator>
     </NavigationContainer>

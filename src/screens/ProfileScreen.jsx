@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import { View, Text, StyleSheet, SafeAreaView, Image, TouchableOpacity, Alert, ActivityIndicator } from "react-native"
+import { View, Text, StyleSheet, SafeAreaView, Image, TouchableOpacity, Alert, ScrollView } from "react-native"
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { Dimensions } from "react-native";
 import { auth, db } from "../../firebaseConfig";
 import { signOut } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, collection, query, orderBy, getDocs, where } from "firebase/firestore";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -12,7 +12,7 @@ const { width, height } = Dimensions.get("window");
 
 const ProfileScreen = () => {
   const [userData, setUserData] = useState(null);
-  // const [loading, setLoading] = useState(true);
+  const [orders, setOrders] = useState([]);
   const [isGuest, setIsGuest] = useState(false);
 
   const navigation = useNavigation();
@@ -47,8 +47,27 @@ const ProfileScreen = () => {
     }
   };
 
+  const fetchUserOrders = async () => {
+    try {
+      const user = auth.currentUser;
+
+      const ordersRef = collection(db, "orders");
+      const querySnapshot = await getDocs(ordersRef);
+      const ordersList = [];
+      querySnapshot.forEach((doc) => {
+        ordersList.push({ id: doc.id, ...doc.data() });
+      });
+
+      setOrders(ordersList);
+      console.log("Fetched order history:", ordersList);
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+    }
+  };
+
   useEffect(() => {
     fetchUserData();
+    fetchUserOrders();
   }, []);
 
   const handleSignOut = async () => {
@@ -79,61 +98,63 @@ const ProfileScreen = () => {
 
   const handleRefresh = () => {
     fetchUserData(); // Refresh user data when the button is pressed
+    fetchUserOrders
+  };
+
+  const handleOrderClick = (orderID) => {
+    navigation.navigate("OrderHistory", { orderID });
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Profile</Text>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity onPress={handleRefresh} style={styles.refreshButton}>
-              <Icon name="refresh" size={24} color="#FFF" />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={handleSignOut} style={styles.signOutButton}>
-            <Icon name="logout" size={24} color="#FFF" />
-          </TouchableOpacity>
-        </View>
-      </View>
-      <View style={styles.divider} />
-      <View style={styles.userInfo}>
-        <View style={styles.infoRow}>
-          <Icon name="person" style={styles.icon} />
-          <Text style={[styles.infoText, styles.name]}>{userData?.name || 'N/A'}</Text>
-        </View>
-        <View style={styles.infoRow}>
-          <Icon name="email" style={styles.icon} />
-          <Text style={[styles.infoText, styles.email]}>{userData?.email || 'N/A'}</Text>
-        </View>
-        <View style={styles.infoRow}>
-          <Icon name="location-on" style={styles.icon} />
-          <Text style={[styles.infoText, styles.address]}>{userData?.address || 'No Address Set!'}</Text>
-        </View>
-      </View>
-      <View style={styles.divider} />
-      <View style={styles.ordersSection}>
-        <Text style={styles.sectionTitle}>Previous Orders</Text>
-        <View style={styles.orderCard}>
-          <View style={styles.orderImage}>
-            <Image source={require('../assets/cheese_pizza.webp')} style={styles.orderImage} />
-          </View>
-          <View style={styles.orderDetails}>
-            <Text style={styles.orderNumber}>Order #12345</Text>
-            <Text style={styles.orderName}>Cheese Pizza</Text>
-            <Text style={styles.orderTotal}>Total: $45.99</Text>
+      <ScrollView>
+        <View style={styles.header}>
+          <Text style={styles.title}>Profile</Text>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity onPress={handleRefresh} style={styles.refreshButton}>
+                <Icon name="refresh" size={24} color="#FFF" />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleSignOut} style={styles.signOutButton}>
+              <Icon name="logout" size={24} color="#FFF" />
+            </TouchableOpacity>
           </View>
         </View>
-        <View style={styles.orderCard}>
-          <View style={styles.orderImage}>
-            <Image source={require('../assets/cheese_pizza.webp')} style={styles.orderImage} />
+        <View style={styles.divider} />
+        <View style={styles.userInfo}>
+          <View style={styles.infoRow}>
+            <Icon name="person" style={styles.icon} />
+            <Text style={[styles.infoText, styles.name]}>{userData?.name || 'N/A'}</Text>
           </View>
-          <View style={styles.orderDetails}>
-            <Text style={styles.orderNumber}>Order #12346</Text>
-            <Text style={styles.orderName}>Cheese Pizza</Text>
-            <Text style={styles.orderTotal}>Total: $29.99</Text>
+          <View style={styles.infoRow}>
+            <Icon name="email" style={styles.icon} />
+            <Text style={[styles.infoText, styles.email]}>{userData?.email || 'N/A'}</Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Icon name="location-on" style={styles.icon} />
+            <Text style={[styles.infoText, styles.address]}>{userData?.address || 'No Address Set!'}</Text>
           </View>
         </View>
-        <Text style={styles.showMoreButton}>Show More</Text>
-      </View>
+
+        <View style={styles.divider} />
+
+        <View style={styles.ordersSection}>
+          <Text style={styles.sectionTitle}>Previous Orders</Text>
+          {orders.length > 0 ? (
+            orders.map((order) => (
+              <TouchableOpacity key={order.id} style={styles.orderCard} onPress={() => handleOrderClick(order.id)}>
+                <View style={styles.orderImage}>
+                  <Image source={require('../assets/card_logo_small.png')} style={styles.orderImage} />
+                </View>
+                <View style={styles.orderDetails}>
+                  <Text style={styles.orderNumber}>Order #{order.id}</Text>
+                </View>
+              </TouchableOpacity>
+            ))
+          ) : (
+            <Text>No orders found.</Text>
+          )}
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -248,8 +269,8 @@ const styles = StyleSheet.create({
     marginBottom: height * 0.015,
   },
   orderImage: {
-    width: width * 0.2,
-    height: width * 0.2,
+    width: width * 0.1,
+    height: width * 0.1,
     marginRight: width * 0.03,
   },
   orderDetails: {
@@ -259,6 +280,7 @@ const styles = StyleSheet.create({
     fontSize: width * 0.04,
     fontWeight: "bold",
     color: "#333333",
+    marginLeft: width * 0.02,
   },
   orderName: {
     fontSize: width * 0.035,

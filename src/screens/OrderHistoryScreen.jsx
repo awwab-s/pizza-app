@@ -9,7 +9,7 @@ const { width, height } = Dimensions.get("window")
 // Custom scale function to adjust sizes based on screen width
 const scale = (size) => (width / 375) * size
 
-const CheckoutScreen = () => {
+const OrderHistoryScreen = () => {
   const navigation = useNavigation()
   const route = useRoute()
   const { orderID } = route.params // Get orderID from navigation params
@@ -48,7 +48,7 @@ const CheckoutScreen = () => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerText}>Order Summary</Text>
+        <Text style={styles.headerText}>Order History</Text>
       </View>
 
       <View style={styles.orderDetails}>
@@ -56,6 +56,7 @@ const CheckoutScreen = () => {
         <Text style={styles.orderTime}>
           Order Time: {order_time && order_time.seconds ? new Date(order_time.seconds * 1000).toLocaleString() : "N/A"}
         </Text>
+
 
         <View style={styles.border}></View>
         {pizzas_ordered.map((pizza, index) => (
@@ -80,10 +81,6 @@ const CheckoutScreen = () => {
         <Text style={styles.sectionTitle}>Delivery Information</Text>
         <Text style={styles.infoText}>Address: {delivery_address}</Text>
       </View>
-
-      <TouchableOpacity style={styles.confirmButton} onPress={() => navigation.navigate("Delivery", { orderID })}>
-        <Text style={styles.buttonText}>Done</Text>
-      </TouchableOpacity>
     </ScrollView>
   )
 }
@@ -213,4 +210,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default CheckoutScreen
+export default OrderHistoryScreen
