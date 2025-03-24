@@ -1,11 +1,11 @@
 import { useState } from "react"
 import { View, StyleSheet, ScrollView, Dimensions } from "react-native"
-import Header from "../components/Header"
+import OrderHeader from "../components/OrderHeader"
 import PizzaInfo from "../components/PizzaInfo"
 import SizeSelector from "../components/SizeSelector"
 import CrustSelector from "../components/CrustSelector"
 import ToppingsSelector from "../components/ToppingsSelector"
-import Footer from "../components/Footer"
+import OrderFooter from "../components/OrderFooter"
 import { getGoogleDriveImage } from "../context/PizzaContext"
 
 const { width } = Dimensions.get("window")
@@ -55,7 +55,7 @@ const PizzaOrderScreen = ({ route }) => {
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <Header isFavorite={isFavorite} setIsFavorite={setIsFavorite} imgURL={{ uri: getGoogleDriveImage(pizza.imageURL)}} />
+        <OrderHeader isFavorite={isFavorite} setIsFavorite={setIsFavorite} imgURL={{ uri: getGoogleDriveImage(pizza.imageURL)}} />
         <View style={styles.content}>
           <PizzaInfo pizza = {pizza}/>
 
@@ -73,7 +73,7 @@ const PizzaOrderScreen = ({ route }) => {
         </View>
       </ScrollView>
 
-      <Footer 
+      <OrderFooter 
         total={calculateTotal()} 
         pizza={pizza} 
         size={size} 

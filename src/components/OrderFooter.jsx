@@ -5,7 +5,7 @@ import { db, auth } from "../../firebaseConfig";
 
 const { width } = Dimensions.get("window")
 
-const Footer = ({ total, pizza, size, crust, toppings }) => {
+const OrderFooter = ({ total, pizza, size, crust, toppings }) => {
   const handleAddToCart = async () => {
     const user = auth.currentUser;
 
@@ -112,5 +112,5 @@ const styles = StyleSheet.create({
   },
 })
 
-export default Footer
+export default OrderFooter
 

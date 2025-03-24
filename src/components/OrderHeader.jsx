@@ -6,7 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 
 const { width, height } = Dimensions.get("window")
 
-const Header = ({ isFavorite, setIsFavorite, imgURL }) => {
+const OrderHeader = ({ isFavorite, setIsFavorite, imgURL }) => {
   const navigation = useNavigation()
   return (
     <View style={styles.container}>
@@ -72,5 +72,5 @@ const styles = StyleSheet.create({
   },
 })
 
-export default Header
+export default OrderHeader
 

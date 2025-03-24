@@ -4,7 +4,7 @@ import CartHeader from "../components/CartHeader"
 import CartItem from "../components/CartItem"
 import CartFooter from "../components/CartFooter"
 import { useNavigation } from "@react-navigation/native"
-import { getDoc, doc } from "firebase/firestore"
+import { getDoc, doc, updateDoc } from "firebase/firestore"
 import { auth, db } from "../../firebaseConfig"
 
 const { width, height } = Dimensions.get("window")
@@ -51,18 +51,48 @@ const CartScreen = ({pizza, price, size}) => {
     fetchCartItems()
   }, [])
 
-  const updateQuantity = (id, newQuantity) => {
+  const updateQuantity = async (id, newQuantity) => {
     if (newQuantity < 1) return // Prevent zero quantity
   
-    setCartItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === id
-          ? { ...item, quantity: newQuantity } // Update only the matching item
-          : item
-      )
-    );
-  };
+    const user = auth.currentUser
+    if (!user) return
   
+    try {
+      const userDocRef = doc(db, "users", user.uid)
+  
+      // Get updated cart items
+      const updatedCart = cartItems.map((item) =>
+        item.id === id ? { ...item, quantity: newQuantity } : item
+      )
+  
+      // Update Firestore: Overwrite only the cart field
+      await updateDoc(userDocRef, { cart: updatedCart })
+  
+      // Update local state
+      setCartItems(updatedCart)
+    } catch (error) {
+      console.error("Error updating quantity:", error)
+    }
+  }
+
+  const handleDeleteItem = async (id) => {
+    const user = auth.currentUser
+
+    try {
+      const userDocRef = doc(db, "users", user.uid)
+  
+      // Remove the item from the cart
+      const updatedCart = cartItems.filter((item) => item.id !== id)
+  
+      // Update Firestore: Overwrite only the cart field
+      await updateDoc(userDocRef, { cart: updatedCart })
+  
+      // Update local state
+      setCartItems(updatedCart)
+    } catch (error) {
+      console.error("Error deleting item:", error)
+    }
+  };
 
   const totalBill = cartItems?.reduce((sum, item) => sum + item.price * item.quantity, 0) || 0
 
@@ -77,7 +107,7 @@ const CartScreen = ({pizza, price, size}) => {
       >
         {cartItems.length > 0 ? (
           cartItems.map((item) => (
-            <CartItem key={item.id} item={item} onUpdateQuantity={updateQuantity} />
+            <CartItem key={item.id} item={item} onUpdateQuantity={updateQuantity} onDelete={handleDeleteItem} />
           ))
         ) : (
           <View style={styles.emptyCartContainer}>

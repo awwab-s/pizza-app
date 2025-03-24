@@ -9,7 +9,7 @@ const scale = (size) => (width / 375) * size
 
 const SWIPE_THRESHOLD = 80
 
-const CartItem = ({ item, onUpdateQuantity }) => {
+const CartItem = ({ item, onUpdateQuantity, onDelete }) => {
   const translateX = useRef(new Animated.Value(0)).current
   const deleteButtonWidth = scale(60)
 
@@ -45,7 +45,7 @@ const CartItem = ({ item, onUpdateQuantity }) => {
     <View style={styles.container}>
       {/* Delete button */}
       <View style={[styles.deleteContainer, { width: deleteButtonWidth }]}>
-        <TouchableOpacity style={styles.deleteButton}>
+        <TouchableOpacity style={styles.deleteButton} onPress={() => onDelete(item.id)}>
           <Icon name="trash-2" size={scale(24)} color="white" />
         </TouchableOpacity>
       </View>
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     left: 0,
     top: 0,
     bottom: 0,
-    backgroundColor: "#d32f2f",
+    backgroundColor: "#B55638",
     borderTopLeftRadius: scale(24),
     borderBottomLeftRadius: scale(24),
     justifyContent: "center",
@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
   price: {
     fontSize: scale(16),
     fontWeight: "bold",
-    color: "#d32f2f",
+    color: "#B55638",
   },
   noToppings: {
     fontStyle: "italic",
