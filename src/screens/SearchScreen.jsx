@@ -3,7 +3,7 @@ import Icon from "react-native-vector-icons/Feather"
 import { View, Text, StyleSheet, SafeAreaView, TextInput, FlatList, TouchableOpacity, Dimensions } from "react-native";
 import { PizzaContext, getGoogleDriveImage } from "../context/PizzaContext";
 import { useNavigation } from "@react-navigation/native";
-import { PizzaItem } from "./HomeScreen"
+import PizzaItem from "../components/PizzaItem";
 
 const { width, height } = Dimensions.get('window');
 
@@ -28,15 +28,15 @@ const SearchScreen = () => {
 
       {/* Search Input */}
       <View style={styles.searchContainer}>
-                  <View style={styles.searchBar}>
-                      <Icon name="search" size={height * 0.025} color="#868686" style={styles.searchIcon} />
-      <TextInput
-        style={styles.searchInput}
-        placeholder="Search for pizzas..."
-        value={searchQuery}
-        onChangeText={setSearchQuery}
-      />
-      </View>
+        <View style={styles.searchBar}>
+        <Icon name="search" size={height * 0.025} color="#868686" style={styles.searchIcon} />
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Search for pizzas..."
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+        />
+        </View>
       </View>
 
       {/* Show results only if user has typed something */}

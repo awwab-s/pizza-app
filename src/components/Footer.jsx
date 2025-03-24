@@ -30,7 +30,6 @@ const Footer = ({ total, pizza, size, crust, toppings }) => {
         if (existingPizzaIndex !== -1) {
           // If the pizza exists, update quantity and price
           cart[existingPizzaIndex].quantity += 1;
-          cart[existingPizzaIndex].price += Number(total);
         } else {
           // Otherwise, add new pizza
           cart.push({

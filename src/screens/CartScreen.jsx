@@ -4,7 +4,7 @@ import CartHeader from "../components/CartHeader"
 import CartItem from "../components/CartItem"
 import CartFooter from "../components/CartFooter"
 import { useNavigation } from "@react-navigation/native"
-import { collection, getDoc, doc } from "firebase/firestore"
+import { getDoc, doc } from "firebase/firestore"
 import { auth, db } from "../../firebaseConfig"
 
 const { width, height } = Dimensions.get("window")
@@ -31,10 +31,18 @@ const CartScreen = ({pizza, price, size}) => {
         const userDocRef = doc(db, "users", user.uid)
         const userDocSnap = await getDoc(userDocRef)
 
-        const cartData = userDocSnap.data().cart
+        const cartData = userDocSnap.exists() ? userDocSnap.data().cart || [] : []
 
         setCartItems(cartData)
         console.log("Fetched cart data:", cartData)
+
+        // Ensure each item has a unique ID
+        const updatedCartData = cartData.map((item, index) => ({
+          ...item,
+          id: item.id || `cart-item-${index}`,
+        }));
+
+        setCartItems(updatedCartData);
       } catch (error) {
         console.error("Error fetching cart data:", error)
       }
@@ -44,12 +52,19 @@ const CartScreen = ({pizza, price, size}) => {
   }, [])
 
   const updateQuantity = (id, newQuantity) => {
-    if (newQuantity < 1) return
+    if (newQuantity < 1) return // Prevent zero quantity
+  
+    setCartItems((prevItems) =>
+      prevItems.map((item) =>
+        item.id === id
+          ? { ...item, quantity: newQuantity } // Update only the matching item
+          : item
+      )
+    );
+  };
+  
 
-    setCartItems((items) => items.map((item) => (item.id === id ? { ...item, quantity: newQuantity } : item)))
-  }
-
-  const totalBill = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
+  const totalBill = cartItems?.reduce((sum, item) => sum + item.price * item.quantity, 0) || 0
 
   return (
     <View style={styles.container}>

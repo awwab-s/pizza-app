@@ -1,15 +1,13 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useState, useEffect } from "react";
-import { Alert } from "react-native";
+import { View, StyleSheet, TouchableOpacity, Dimensions } from "react-native";
 
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { View, StyleSheet, TouchableOpacity, Dimensions } from "react-native";
 import Icon from "react-native-vector-icons/Feather";
-import Cart from "react-native-vector-icons/Ionicons";
 
 import { PizzaProvider } from "./src/context/PizzaContext";
+import uploadPizzas from "./src/data/uploadPizzas";
 
 // Import screens
 import SplashScreen from "./src/screens/SplashScreen";
@@ -21,7 +19,6 @@ import CartScreen from "./src/screens/CartScreen";
 import SearchScreen from "./src/screens/SearchScreen";
 import FavoritesScreen from "./src/screens/FavoritesScreen";
 import ProfileScreen from "./src/screens/ProfileScreen";
-import uploadPizzas from "./src/data/uploadPizzas";
 import DetailsScreen from "./src/screens/DetailsScreen";
 import PizzaOrderScreen from "./src/screens/PizzaOrderScreen";
 import CheckoutScreen from "./src/screens/CheckoutScreen";
@@ -108,6 +105,17 @@ const BottomTabs = () => {
 }
 
 const App = () => {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 2000); // Show splash screen for 2 seconds
+  }, []);
+
+  if (isLoading) {
+    return <SplashScreen />;
+  }
 
   // useEffect(() => {
   //   uploadPizzas();
@@ -116,7 +124,6 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Welcome">
-        <Stack.Screen name="Splash" component={SplashScreen} />
         <Stack.Screen name="Welcome" component={WelcomeScreen} />
         <Stack.Screen name="SignIn" component={SignInScreen} />
         <Stack.Screen name="SignUp" component={SignUpScreen} />

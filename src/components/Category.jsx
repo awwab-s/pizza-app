@@ -3,40 +3,23 @@ import { ScrollView, StyleSheet, Text, TouchableOpacity, Dimensions, View } from
 
 const { width, height } = Dimensions.get('window');
 
+const categories = ['All', 'Classic', 'Vegetarian', 'Chicken', 'Specials'];
+
 const Category = ({ selectedCategory, setSelectedCategory }) => {
   return (
     <View style={{ paddingHorizontal: width * 0.024 }}>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoriesContainer}>
-        <TouchableOpacity 
-          style={selectedCategory === 'All' ? styles.categoryButtonActive : styles.categoryButton} 
-          onPress={() => setSelectedCategory('All')}
-        >
-          <Text style={selectedCategory === 'All' ? styles.categoryButtonTextActive : styles.categoryButtonText}>All</Text>
-        </TouchableOpacity>
-        <TouchableOpacity 
-          style={selectedCategory === 'Classic' ? styles.categoryButtonActive : styles.categoryButton} 
-          onPress={() => setSelectedCategory('Classic')}
-        >
-          <Text style={selectedCategory === 'Classic' ? styles.categoryButtonTextActive : styles.categoryButtonText}>Classic</Text>
-        </TouchableOpacity>
-        <TouchableOpacity 
-          style={selectedCategory === 'Vegetable' ? styles.categoryButtonActive : styles.categoryButton} 
-          onPress={() => setSelectedCategory('Vegetable')}
-        >
-          <Text style={selectedCategory === 'Vegetable' ? styles.categoryButtonTextActive : styles.categoryButtonText}>Vegetable</Text>
-        </TouchableOpacity>
-        <TouchableOpacity 
-          style={selectedCategory === 'Chicken' ? styles.categoryButtonActive : styles.categoryButton} 
-          onPress={() => setSelectedCategory('Chicken')}
-        >
-          <Text style={selectedCategory === 'Chicken' ? styles.categoryButtonTextActive : styles.categoryButtonText}>Chicken</Text>
-        </TouchableOpacity>
-        <TouchableOpacity 
-          style={selectedCategory === 'Specials' ? styles.categoryButtonActive : styles.categoryButton} 
-          onPress={() => setSelectedCategory('Specials')}
-        >
-          <Text style={selectedCategory === 'Specials' ? styles.categoryButtonTextActive : styles.categoryButtonText}>Specials</Text>
-        </TouchableOpacity>
+        {categories.map((category) => (
+          <TouchableOpacity
+            key={category}
+            style={selectedCategory === category ? styles.categoryButtonActive : styles.categoryButton}
+            onPress={() => setSelectedCategory(category)}
+          >
+            <Text style={selectedCategory === category ? styles.categoryButtonTextActive : styles.categoryButtonText}>
+              {category}
+            </Text>
+          </TouchableOpacity>
+        ))}
       </ScrollView>
     </View>
   );

@@ -1,72 +1,62 @@
 import React, { useState, useEffect, useContext } from "react"
 import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet, ScrollView, SafeAreaView, StatusBar, Dimensions, ActivityIndicator, PermissionsAndroid, Alert, FlatList } from "react-native"
 import Icon from "react-native-vector-icons/Feather"
-import MaterialIcons from "react-native-vector-icons/MaterialIcons"
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import AsyncStorage from "@react-native-async-storage/async-storage";
+
+import { PizzaContext, getGoogleDriveImage } from "../context/PizzaContext";
+
 import Search from "../components/Search"
 import Category from "../components/Category"
-import Geolocation from "react-native-geolocation-service";
-import { PizzaContext, getGoogleDriveImage } from "../context/PizzaContext";
+import SpecialOffer from "../components/SpecialOffer";
+import PizzaList from "../components/PizzaList";
+import PizzaItem from "../components/PizzaItem";
+
+import { onAuthStateChanged } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { auth, db } from "../../firebaseConfig";
+import Geolocation from "react-native-geolocation-service";
 
 const { width, height } = Dimensions.get('window');
-
-export const PizzaItem = ({ imgURL, name, price, discountText, rating }) => {
-  return (
-    <View style={styles.pizzaItem}>
-      <Image source={{ uri: imgURL}} style={styles.pizzaImage} />
-      <View style={styles.pizzaDetails}>
-        <View style={styles.pizzaNameContainer}>
-          <Text style={styles.pizzaName}>{name} Pizza</Text>
-        </View>
-        <View style={styles.ratingContainer}>
-          <Text style={styles.ratingText}>{rating}</Text>
-          <MaterialIcons name="star" size={height * 0.024} color="#fcca18" />
-        </View>
-        
-        <View style={styles.priceContainer}>
-          <View style={styles.priceWrapper}>
-            <Text style={styles.price}>Rs. {price}</Text>
-            <View style={styles.discountBadge}>
-              <Text style={styles.discountText}>{discountText}</Text>
-            </View>
-          </View>
-        </View>
-      </View>
-    </View>
-  )
-}
 
 const HomeScreen = ({navigation}) => {
   const [location, setLocation] = useState("Select a location");
   const [isGuest, setIsGuest] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [loadingPizzas, setLoadingPizzas] = useState(true);
   const { pizzas, fetchPizzas } = useContext(PizzaContext);
 
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [filteredPizzas, setFilteredPizzas] = useState(pizzas);
 
   useEffect(() => {
-    const checkGuestUser = async () => {
-      const user = await AsyncStorage.getItem("user");
-      if (user === "guest") {
-        setIsGuest(true);
-      }
-    };
-
-    checkGuestUser();
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setIsGuest(!user); // User is not logged in
+    });
+  
+    return unsubscribe;
   }, []);
 
   useEffect(() => {
-    // Filter pizzas based on selected category
+    const fetchData = async () => {
+      setLoadingPizzas(true);
+      await fetchPizzas();
+      setLoadingPizzas(false);
+    };
+    
+    fetchData();
+  }, []);
+  
+  useEffect(() => {
     if (selectedCategory === 'All') {
       setFilteredPizzas(pizzas);
+    } else if (selectedCategory === 'Vegetarian') {
+      setFilteredPizzas(pizzas.filter(pizza => pizza.category.includes('Vegetable')));
+    } else if (selectedCategory === 'Specials') {
+      setFilteredPizzas(pizzas.filter(pizza => pizza.category.includes('Special')));
     } else {
-      setFilteredPizzas(pizzas.filter(pizza => pizza.category === selectedCategory));
+      setFilteredPizzas(pizzas.filter(pizza => pizza.category.includes(selectedCategory)));
     }
-  }, [selectedCategory, pizzas]);
+  }, [selectedCategory, pizzas]);  
 
   // Function to request location permission
   const requestLocationPermission = async () => {
@@ -162,7 +152,6 @@ const HomeScreen = ({navigation}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Header */}
         <View style={styles.header}>
@@ -185,7 +174,7 @@ const HomeScreen = ({navigation}) => {
             </TouchableOpacity>
           </View>
           <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
-          <View style={styles.notificationContainer}>
+          <View style={styles.cartContainer}>
             <Ionicons name="cart-outline" size={height * 0.04} color="#0f0e0d" />
             
           </View>
@@ -196,20 +185,11 @@ const HomeScreen = ({navigation}) => {
         <Search />
 
         {/* Special Offer */}
-        <View style={styles.offerContainer}>
-          <View style={styles.offerContent}>
-            <Text style={styles.offerTitle}>Special Offer</Text>
-            <Text style={styles.offerSubtitle}>Discount 25% off for all pizzas.</Text>
-            <TouchableOpacity style={styles.orderButton}>
-              <Text style={styles.orderButtonText}>Order Now</Text>
-            </TouchableOpacity>
-          </View>
-          <Image source={require('../assets/special_offer_pizza.png')} style={styles.offerImage} />
-        </View>
+        <SpecialOffer />
 
-        {/* Popular Pizza */}
+        {/* Pizza Menu */}
         <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Popular Pizza</Text>
+          <Text style={styles.sectionTitle}>Choose Your Pizza</Text>
           <TouchableOpacity>
             <Text style={styles.seeAllText}>See All</Text>
           </TouchableOpacity>
@@ -220,15 +200,11 @@ const HomeScreen = ({navigation}) => {
 
         {/* Pizza Items */}
         <View style={styles.pizzaItemsContainer}>
-          <FlatList
-            data={filteredPizzas}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-              <TouchableOpacity onPress={() => navigation.navigate('PizzaOrder', { pizza: item })}>
-                <PizzaItem imgURL={ getGoogleDriveImage(item.imageURL) } name= {item.name} price={item.basePrice} discountText="25% Off" rating={item.rating} />
-              </TouchableOpacity>
-            )}
-          />
+          {loadingPizzas ? (
+            <ActivityIndicator size="large" color="#B55638" />
+          ) : (
+            <PizzaList pizzas={filteredPizzas} navigation={navigation} />
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -240,13 +216,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#ffffff",
     paddingHorizontal: width * 0.02,
+    paddingVertical: height * 0.024,
   },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: width * 0.024,
-    paddingTop: height * 0.024,
   },
   locationLabel: {
     fontSize: height * 0.018,
@@ -264,7 +240,7 @@ const styles = StyleSheet.create({
     marginLeft: width * 0.004,
     marginRight: width * 0.004,
   },
-  notificationContainer: {
+  cartContainer: {
     width: width * 0.15,
     height: width * 0.15,
     borderRadius: width * 0.075,
@@ -272,57 +248,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     position: "relative",
-  },
-  notificationDot: {
-    position: "absolute",
-    top: height * 0.012,
-    right: width * 0.012,
-    width: width * 0.010,
-    height: width * 0.010,
-    borderRadius: height * 0.005,
-    backgroundColor: "#fb3e49",
-  },
-  offerContainer: {
-    marginHorizontal: width * 0.024,
-    marginTop: height * 0.024,
-    backgroundColor: "#f8f8f8",
-    borderRadius: height * 0.024,
-    padding: height * 0.024,
-    flexDirection: "row",
-    position: "relative",
-    overflow: "hidden",
-  },
-  offerContent: {
-    width: "60%",
-  },
-  offerTitle: {
-    fontSize: height * 0.024,
-    fontWeight: "bold",
-    color: "#0f0e0d",
-  },
-  offerSubtitle: {
-    fontSize: height * 0.018,
-    color: "#868686",
-    marginTop: height * 0.004,
-  },
-  orderButton: {
-    backgroundColor: "#B55638",
-    paddingHorizontal: width * 0.024,
-    paddingVertical: height * 0.012,
-    borderRadius: height * 0.030,
-    marginTop: height * 0.016,
-    alignSelf: "flex-start",
-  },
-  orderButtonText: {
-    color: "#ffffff",
-    fontWeight: "500",
-    fontSize: height * 0.016,
-  },
-  offerImage: {
-    width: height * 0.19,
-    height: height * 0.19,
-    position: "absolute",
-    right: 0,
   },
   sectionHeader: {
     flexDirection: "row",
@@ -341,104 +266,9 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: "#B55638",
   },
-
   pizzaItemsContainer: {
     paddingHorizontal: width * 0.024,
     marginTop: height * 0.024,
-    paddingBottom: height * 0.1, 
-  },
-  pizzaItem: {
-    backgroundColor: "#f8f8f8",
-    borderRadius: height * 0.024,
-    padding: height * 0.016,
-    flexDirection: "row",
-    marginBottom: height * 0.016,
-  },
-  pizzaImage: {
-    width: height * 0.112,
-    height: height * 0.112,
-  },
-  pizzaDetails: {
-    marginLeft: width * 0.016,
-    flex: 1,
-    padding: height * 0.005,
-    justifyContent: "center",
-  },
-  pizzaNameContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  pizzaName: {
-    fontSize: height * 0.022,
-    fontWeight: "bold",
-    color: "#0f0e0d",
-  },
-  offerValidity: {
-    fontSize: height * 0.014,
-    color: "#868686",
-    marginTop: height * 0.004,
-  },
-  pizzaInfoContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: height * 0.008,
-  },
-  deliveryTime: {
-    fontSize: height * 0.014,
-    color: "#868686",
-  },
-  dot: {
-    fontSize: height * 0.014,
-    color: "#868686",
-    marginHorizontal: width * 0.008,
-  },
-  ratingContainer: {
-    position: "absolute",
-    right: 0,
-    top: 0,
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  ratingText: {
-    fontSize: width * 0.04,
-    fontWeight: "500",
-    marginRight: width * 0.01,
-  },
-  priceContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginTop: height * 0.02,
-  },
-  priceWrapper: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: width * 0.02,
-  },
-  price: {
-    fontSize: height * 0.020,
-    fontWeight: "bold",
-    color: "#B55638",
-  },
-  discountBadge: {
-    backgroundColor: "#B55638",
-    paddingHorizontal: height * 0.008,
-    paddingVertical: height * 0.004,
-    borderRadius: height * 0.030,
-  },
-  discountText: {
-    fontSize: height * 0.012,
-    color: "#ffffff",
-    fontWeight: "600",
-  },
-  addButton: {
-    backgroundColor: "#0f0e0d",
-    width: height * 0.045,
-    height: height * 0.035,
-    borderRadius: height * 0.016,
-    justifyContent: "center",
-    alignItems: "center",
   },
 })
 

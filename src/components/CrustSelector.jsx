@@ -14,7 +14,7 @@ const CrustSelector = ({ crust, setCrust, prices }) => {
 
         <RadioButton
           selected={crust === "Cheese"}
-          label="Cheese Brust"
+          label="Cheese Burst"
           price={`+ Rs. ${prices["Cheese Crust"].toFixed(2)}`}
           onPress={() => setCrust("Cheese")}
           isLast={true}
