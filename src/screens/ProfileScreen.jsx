@@ -15,6 +15,7 @@ const ProfileScreen = () => {
   const [orders, setOrders] = useState([]);
   const [isGuest, setIsGuest] = useState(false);
   const [loadingOrders, setLoadingOrders] = useState(true);
+  const [showMore, setShowMore] = useState(false);
 
   const navigation = useNavigation();
 
@@ -108,6 +109,16 @@ const ProfileScreen = () => {
     navigation.navigate("OrderHistory", { orderID });
   };
 
+  const handleShowMore = () => {
+    setShowMore(true); // Show all orders when "Show More" is clicked
+  };
+
+  const handleShowLess = () => {
+    setShowMore(false); // Show only the first 3 orders when "Show Less" is clicked
+  };
+
+  const displayedOrders = showMore ? orders : orders.slice(0, 3); // Show up to 3 orders initially
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
@@ -144,8 +155,8 @@ const ProfileScreen = () => {
           <Text style={styles.sectionTitle}>Previous Orders</Text>
           {loadingOrders ? (
             <ActivityIndicator size="large" color="#B55638" />  // Show loading spinner while fetching orders
-          ) : orders.length > 0 ? (
-            orders.map((order) => (
+          ) : displayedOrders.length > 0 ? (
+            displayedOrders.map((order) => (
               <TouchableOpacity key={order.id} style={styles.orderCard} onPress={() => handleOrderClick(order.id)}>
                 <View style={styles.orderImage}>
                   <Image source={require('../assets/card_logo_small.png')} style={styles.orderImage} />
@@ -158,6 +169,16 @@ const ProfileScreen = () => {
           ) : (
             <Text>No orders found.</Text>
           )}
+          {orders.length > 3 && !showMore && (
+            <TouchableOpacity onPress={handleShowMore}>
+              <Text style={styles.showMoreText}>Show More</Text>
+            </TouchableOpacity>
+          )}
+          {showMore && orders.length > 3 && (
+            <TouchableOpacity onPress={handleShowLess}>
+              <Text style={styles.showMoreText}>Show Less</Text>
+            </TouchableOpacity>
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -168,6 +189,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#ffffff",
+    paddingBottom: height * 0.02,
   },
   header: {
     paddingHorizontal: width * 0.06,
@@ -175,7 +197,7 @@ const styles = StyleSheet.create({
     flexDirection: "row", 
     justifyContent: "space-between", 
     alignItems: "center", 
-    marginBottom: 10
+    marginBottom: height * 0.02,
   },
   buttonContainer: {
     flexDirection: "row",
@@ -285,7 +307,7 @@ const styles = StyleSheet.create({
     color: "#333333",
     marginLeft: width * 0.02,
   },
-  showMoreButton: {
+  showMoreText: {
     fontSize: width * 0.04,
     color: "#007bff",
     textAlign: "center",

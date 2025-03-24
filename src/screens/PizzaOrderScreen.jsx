@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { View, StyleSheet, ScrollView, Dimensions } from "react-native"
+import { View, StyleSheet, ScrollView, Dimensions, Alert } from "react-native"
 import OrderHeader from "../components/OrderHeader"
 import PizzaInfo from "../components/PizzaInfo"
 import SizeSelector from "../components/SizeSelector"
@@ -15,7 +15,6 @@ const PizzaOrderScreen = ({ route }) => {
   const [size, setSize] = useState("Medium")
   const [crust, setCrust] = useState("Cheese")
   const [toppings, setToppings] = useState([])
-  const [isFavorite, setIsFavorite] = useState(false)
 
   const prices = {
     "Cheese Crust": 150,
@@ -55,7 +54,7 @@ const PizzaOrderScreen = ({ route }) => {
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <OrderHeader isFavorite={isFavorite} setIsFavorite={setIsFavorite} imgURL={{ uri: getGoogleDriveImage(pizza.imageURL)}} />
+        <OrderHeader pizza={pizza} imgURL={{ uri: getGoogleDriveImage(pizza.imageURL)}} />
         <View style={styles.content}>
           <PizzaInfo pizza = {pizza}/>
 

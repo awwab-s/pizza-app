@@ -80,7 +80,7 @@ const HomeScreen = ({navigation}) => {
           {loadingPizzas ? (
             <ActivityIndicator size="large" color="#B55638" />
           ) : (
-            <PizzaList pizzas={filteredPizzas} navigation={navigation} />
+            <PizzaList pizzas={filteredPizzas} onPress={(item) => navigation.navigate("PizzaOrder", { pizza: item })} />
           )}
         </View>
       </ScrollView>
