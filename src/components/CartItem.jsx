@@ -45,7 +45,7 @@ const CartItem = ({ item, onUpdateQuantity, onDelete }) => {
     <View style={styles.container}>
       {/* Delete button */}
       <View style={[styles.deleteContainer, { width: deleteButtonWidth }]}>
-        <TouchableOpacity style={styles.deleteButton} onPress={() => onDelete(item.id)}>
+        <TouchableOpacity style={styles.deleteButton} onPress={() => onDelete(item.item_no)}>
           <Icon name="trash-2" size={scale(24)} color="white" />
         </TouchableOpacity>
       </View>
@@ -72,8 +72,8 @@ const CartItem = ({ item, onUpdateQuantity, onDelete }) => {
 
           <QuantityControl
             quantity={item.quantity}
-            onDecrease={() => onUpdateQuantity(item.id, item.quantity - 1)}
-            onIncrease={() => onUpdateQuantity(item.id, item.quantity + 1)}
+            onDecrease={() => onUpdateQuantity(item.item_no, item.quantity - 1)}
+            onIncrease={() => onUpdateQuantity(item.item_no, item.quantity + 1)}
           />
         </View>
       </Animated.View>

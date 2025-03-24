@@ -36,13 +36,6 @@ const CartScreen = ({pizza, price, size}) => {
         setCartItems(cartData)
         console.log("Fetched cart data:", cartData)
 
-        // Ensure each item has a unique ID
-        const updatedCartData = cartData.map((item, index) => ({
-          ...item,
-          id: item.id || `cart-item-${index}`,
-        }));
-
-        setCartItems(updatedCartData);
       } catch (error) {
         console.error("Error fetching cart data:", error)
       }
@@ -51,7 +44,7 @@ const CartScreen = ({pizza, price, size}) => {
     fetchCartItems()
   }, [])
 
-  const updateQuantity = async (id, newQuantity) => {
+  const updateQuantity = async (item_no, newQuantity) => {
     if (newQuantity < 1) return // Prevent zero quantity
   
     const user = auth.currentUser
@@ -62,7 +55,7 @@ const CartScreen = ({pizza, price, size}) => {
   
       // Get updated cart items
       const updatedCart = cartItems.map((item) =>
-        item.id === id ? { ...item, quantity: newQuantity } : item
+        item.item_no === item_no ? { ...item, quantity: newQuantity } : item
       )
   
       // Update Firestore: Overwrite only the cart field
@@ -75,14 +68,14 @@ const CartScreen = ({pizza, price, size}) => {
     }
   }
 
-  const handleDeleteItem = async (id) => {
+  const handleDeleteItem = async (item_no) => {
     const user = auth.currentUser
 
     try {
       const userDocRef = doc(db, "users", user.uid)
   
       // Remove the item from the cart
-      const updatedCart = cartItems.filter((item) => item.id !== id)
+      const updatedCart = cartItems.filter((item) => item.item_no !== item_no)
   
       // Update Firestore: Overwrite only the cart field
       await updateDoc(userDocRef, { cart: updatedCart })
@@ -107,7 +100,7 @@ const CartScreen = ({pizza, price, size}) => {
       >
         {cartItems.length > 0 ? (
           cartItems.map((item) => (
-            <CartItem key={item.id} item={item} onUpdateQuantity={updateQuantity} onDelete={handleDeleteItem} />
+            <CartItem key={item.item_no} item={item} onUpdateQuantity={updateQuantity} onDelete={handleDeleteItem} />
           ))
         ) : (
           <View style={styles.emptyCartContainer}>

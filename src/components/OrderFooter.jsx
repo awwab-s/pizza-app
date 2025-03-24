@@ -25,15 +25,24 @@ const OrderFooter = ({ total, pizza, size, crust, toppings }) => {
         const cart = userData.cart || [];
 
         // Check if the pizza is already in the cart
-        const existingPizzaIndex = cart.findIndex((item) => item.pizzaId === pizza.id && item.size === size && item.crust === crust && item.toppings.join() === toppings.join());
+        const existingPizzaIndex = cart.findIndex(
+          (item) =>
+            item.pizza_id === pizza.id &&
+            item.size === size &&
+            item.crust === crust &&
+            item.toppings.join() === toppings.join()
+        );
 
         if (existingPizzaIndex !== -1) {
           // If the pizza exists, update quantity and price
           cart[existingPizzaIndex].quantity += 1;
         } else {
+          const item_no = cart.length + 1;
+          
           // Otherwise, add new pizza
           cart.push({
-            pizzaId: pizza.id,
+            item_no: item_no,
+            pizza_id: pizza.id,
             name: pizza.name,
             imageURL: pizza.imageURL,
             size: size,

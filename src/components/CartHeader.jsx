@@ -9,7 +9,7 @@ const CartHeader = () => {
   const navigation = useNavigation()
   return (
     <View style={styles.header}>
-      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+      <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate("Main")}>
         <Icon name="chevron-left" size={scale(24)} color="#121212" />
       </TouchableOpacity>
       <Text style={styles.title}>Cart</Text>
