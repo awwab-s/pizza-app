@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { View, Text, StyleSheet, ScrollView, Dimensions } from "react-native"
+import { View, Text, StyleSheet, ScrollView, Dimensions, ActivityIndicator } from "react-native"
 import CartHeader from "../components/CartHeader"
 import CartItem from "../components/CartItem"
 import CartFooter from "../components/CartFooter"
@@ -15,6 +15,7 @@ const scale = (size) => (width / 375) * size
 const CartScreen = ({pizza, price, size}) => {
   const navigation = useNavigation()
   const [cartItems, setCartItems] = useState([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchCartItems = async () => {
@@ -35,9 +36,11 @@ const CartScreen = ({pizza, price, size}) => {
 
         setCartItems(cartData)
         console.log("Fetched cart data:", cartData)
+        setLoading(false)
 
       } catch (error) {
         console.error("Error fetching cart data:", error)
+        setLoading(false)
       }
     }
 
@@ -98,7 +101,9 @@ const CartScreen = ({pizza, price, size}) => {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {cartItems.length > 0 ? (
+        {loading ? (
+          <ActivityIndicator size="large" color="#b55638" />
+        ) : cartItems.length > 0 ? (
           cartItems.map((item) => (
             <CartItem key={item.item_no} item={item} onUpdateQuantity={updateQuantity} onDelete={handleDeleteItem} />
           ))

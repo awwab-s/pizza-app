@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { View, Text, StyleSheet, SafeAreaView, Image, TouchableOpacity, Alert, ScrollView } from "react-native"
+import { View, Text, StyleSheet, SafeAreaView, Image, TouchableOpacity, Alert, ScrollView, ActivityIndicator  } from "react-native"
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { Dimensions } from "react-native";
 import { auth, db } from "../../firebaseConfig";
@@ -14,6 +14,7 @@ const ProfileScreen = () => {
   const [userData, setUserData] = useState(null);
   const [orders, setOrders] = useState([]);
   const [isGuest, setIsGuest] = useState(false);
+  const [loadingOrders, setLoadingOrders] = useState(true);
 
   const navigation = useNavigation();
 
@@ -59,9 +60,11 @@ const ProfileScreen = () => {
       });
 
       setOrders(ordersList);
+      setLoadingOrders(false);
       console.log("Fetched order history:", ordersList);
     } catch (error) {
       console.error("Error fetching orders:", error);
+      setLoadingOrders(false);
     }
   };
 
@@ -139,7 +142,9 @@ const ProfileScreen = () => {
 
         <View style={styles.ordersSection}>
           <Text style={styles.sectionTitle}>Previous Orders</Text>
-          {orders.length > 0 ? (
+          {loadingOrders ? (
+            <ActivityIndicator size="large" color="#B55638" />  // Show loading spinner while fetching orders
+          ) : orders.length > 0 ? (
             orders.map((order) => (
               <TouchableOpacity key={order.id} style={styles.orderCard} onPress={() => handleOrderClick(order.id)}>
                 <View style={styles.orderImage}>
@@ -158,8 +163,6 @@ const ProfileScreen = () => {
     </SafeAreaView>
   );
 }
-
-
 
 const styles = StyleSheet.create({
   container: {
@@ -281,15 +284,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#333333",
     marginLeft: width * 0.02,
-  },
-  orderName: {
-    fontSize: width * 0.035,
-    color: "#777",
-    marginTop: 5,
-  },
-  orderTotal: {
-    fontSize: width * 0.035,
-    color: "#666666",
   },
   showMoreButton: {
     fontSize: width * 0.04,

@@ -43,14 +43,10 @@ const OrderHistoryScreen = () => {
     )
   }
 
-  const { order_time, pizzas_ordered, total_bill, delivery_address, order_id } = orderData
+  const { order_time, pizzas_ordered, total_bill, delivery_address, phone_number, order_id } = orderData
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Order History</Text>
-      </View>
-
       <View style={styles.orderDetails}>
         <Text style={styles.sectionTitle}>Order ID: {order_id}</Text>
         <Text style={styles.orderTime}>
@@ -65,11 +61,13 @@ const OrderHistoryScreen = () => {
               <Text style={styles.pizzaName}>{pizza.name}</Text>
               <Text style={styles.pizzaPrice}>Rs. {pizza.price}</Text>
             </View>
-            <Text style={styles.quantityText}>Quantity: {pizza.quantity}</Text>
-            <Text style={styles.sizeText}>Size: {pizza.size}</Text>
-            <Text style={styles.crustText}>Crust: {pizza.crust}</Text>
-            {pizza.toppings.length > 0 && (
-              <Text style={styles.toppingsText}>Toppings: {pizza.toppings.join(", ")}</Text>
+            <Text style={[styles.quantityText, { color: '#333' }]}>Quantity: <Text style={styles.quantityText}>{pizza.quantity}</Text></Text>
+            <Text style={[styles.sizeText, { color: '#333' }]}>Size: <Text style={styles.sizeText}>{pizza.size}</Text></Text>
+            <Text style={[styles.crustText, { color: '#333' }]}>Crust: <Text style={styles.crustText}>{pizza.crust}</Text></Text>
+            {pizza.toppings.length > 0 ? (
+              <Text style={[styles.toppingsText, { color: '#333' }]}>Toppings: <Text style={styles.toppingsText}>{pizza.toppings.join(", ")}</Text></Text>
+            ) : (
+              <Text style={[styles.toppingsText, { color: '#333' }]}>Toppings: <Text style={[styles.toppingsText, { fontStyle: 'italic' }]}>None</Text></Text>
             )}
             <Text style={styles.itemDetails}>Total: Rs. {pizza.price * pizza.quantity}</Text>
           </View>
@@ -79,7 +77,10 @@ const OrderHistoryScreen = () => {
 
       <View style={styles.deliveryInfo}>
         <Text style={styles.sectionTitle}>Delivery Information</Text>
-        <Text style={styles.infoText}>Address: {delivery_address}</Text>
+        <Text style={styles.infoLabel}>Address:</Text>
+        <Text style={styles.infoText}>{delivery_address}</Text>
+        <Text style={styles.infoLabel}>Phone Number:</Text>
+        <Text style={styles.infoText}>{phone_number}</Text>
       </View>
     </ScrollView>
   )
@@ -89,18 +90,6 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "#f5f5f5",
     padding: scale(20),
-  },
-  header: {
-    backgroundColor: "#b55638",
-    borderRadius: scale(8),
-    padding: scale(16),
-    marginBottom: scale(20),
-  },
-  headerText: {
-    color: "#fff",
-    fontSize: scale(24),
-    fontWeight: "bold",
-    textAlign: "center",
   },
   border: {
     marginBottom: scale(16),
@@ -149,13 +138,13 @@ const styles = StyleSheet.create({
   quantityText: {
     fontSize: scale(16),
     fontWeight: "600",
-    color: "#333",
+    color: "#8e8e8e",
     marginBottom: scale(8),
   },
   sizeText: {
     fontSize: scale(14),
-    fontWeight: "500",  // Medium weight for the size
-    color: "#8e8e8e",  // Medium gray for size
+    fontWeight: "500",  
+    color: "#8e8e8e",  
     marginBottom: scale(4),
   },
   crustText: {
@@ -188,9 +177,16 @@ const styles = StyleSheet.create({
     padding: scale(16),
     marginBottom: scale(20),
   },
-  infoText: {
+  infoLabel: {
     fontSize: scale(16),
+    fontWeight: "600",
     color: "#333",
+    marginBottom: scale(4),
+  },
+  infoText: {
+    fontSize: scale(15),
+    color: "#555",
+    marginBottom: scale(10),
   },
   confirmButton: {
     backgroundColor: "#b55638",

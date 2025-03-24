@@ -1,13 +1,16 @@
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Alert } from "react-native"
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Alert, TextInput, Modal } from "react-native"
 import Icon from "react-native-vector-icons/Feather"
 import { useNavigation } from "@react-navigation/native"
 import { collection, doc, setDoc, getDoc, getDocs, query, where, Timestamp } from "firebase/firestore"
 import { auth, db } from "../../firebaseConfig"
+import React, { useState } from "react"
 
 const { width, height } = Dimensions.get("window")
 const scale = (size) => (width / 375) * size
 
 const CartFooter = ({ totalBill, cartItems }) => {
+  const [phoneNumber, setPhoneNumber] = useState("")
+  const [modalVisible, setModalVisible] = useState(false)
   const navigation = useNavigation()
 
   const generateUniqueOrderID = async () => {
@@ -48,6 +51,7 @@ const CartFooter = ({ totalBill, cartItems }) => {
         total_bill: totalBill,
         pizzas_ordered: cartItems,
         delivery_address: deliveryAddress,
+        phone_number: phoneNumber,
         status: "Pending",
       }
 
@@ -77,7 +81,10 @@ const CartFooter = ({ totalBill, cartItems }) => {
       "Are you sure you want to place this order?",
       [
         { text: "Cancel", style: "cancel" },
-        { text: "Yes", onPress: placeOrder } // Calls the function to place the order
+        { text: "Yes", onPress: () => {
+            setModalVisible(true); // Set the modal to visible after confirming the order
+          } 
+        }
       ]
     )
   }  
@@ -93,6 +100,42 @@ const CartFooter = ({ totalBill, cartItems }) => {
         <Text style={styles.buttonText}>Place Order</Text>
         <Icon name="chevron-right" size={scale(20)} color="#121212" />
       </TouchableOpacity>
+
+      {/* Modal for Phone Number Input */}
+      <Modal
+        visible={modalVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalBackground}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalTitle}>Enter Phone Number</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Phone Number"
+              keyboardType="numeric"
+              value={phoneNumber}
+              onChangeText={setPhoneNumber}
+            />
+            <TouchableOpacity
+              style={styles.submitButton}
+              onPress={() => {
+                placeOrder()
+                setModalVisible(false) // Close modal after submitting
+              }}
+            >
+              <Text style={styles.submitButtonText}>Submit</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.cancelButton}
+              onPress={() => setModalVisible(false)} // Close modal if canceled
+            >
+              <Text style={styles.cancelButtonText}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   )
 }
@@ -134,6 +177,50 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: "#121212",
     marginRight: scale(8),
+  },
+  modalBackground: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContainer: {
+    width: scale(300),
+    backgroundColor: "white",
+    padding: scale(20),
+    borderRadius: scale(10),
+    alignItems: "center",
+  },
+  modalTitle: {
+    fontSize: scale(18),
+    fontWeight: "600",
+    marginBottom: scale(10),
+  },
+  input: {
+    width: "100%",
+    height: 'auto',
+    borderColor: "#ddd",
+    borderWidth: 1,
+    borderRadius: scale(10),
+    paddingLeft: scale(10),
+    marginBottom: scale(20),
+  },
+  submitButton: {
+    backgroundColor: "#b55638",
+    borderRadius: scale(10),
+    paddingVertical: scale(10),
+    paddingHorizontal: scale(30),
+  },
+  submitButtonText: {
+    fontSize: scale(16),
+    color: "white",
+  },
+  cancelButton: {
+    marginTop: scale(10),
+  },
+  cancelButtonText: {
+    fontSize: scale(16),
+    color: "#888",
   },
 })
 
