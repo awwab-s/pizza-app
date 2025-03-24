@@ -6,7 +6,7 @@ const PizzaInfo = ({pizza}) => {
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>{pizza.name}</Text>
+        <Text style={styles.title}>{pizza.name} Pizza</Text>
         <View style={styles.ratingContainer}>
           <Text style={styles.ratingText}>{pizza.rating}</Text>
           <Text style={styles.starIcon}>★</Text>

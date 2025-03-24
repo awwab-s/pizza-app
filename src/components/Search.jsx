@@ -1,20 +1,24 @@
 import Icon from "react-native-vector-icons/Feather"
 import MaterialIcons from "react-native-vector-icons/MaterialIcons"
-import { View, StyleSheet, TextInput, TouchableOpacity, Dimensions } from "react-native"
+import { View, StyleSheet, TextInput, Pressable, Dimensions } from "react-native"
+import { useNavigation } from "@react-navigation/native"
 
 const { width, height } = Dimensions.get('window');
 
 const Search = () => {
+    const navigation = useNavigation()
+    
     return (
         <View style={styles.searchContainer}>
-            <View style={styles.searchBar}>
+            <Pressable style={styles.searchBar} onPress={() => navigation.navigate('Search')}>
                 <Icon name="search" size={height * 0.025} color="#868686" style={styles.searchIcon} />
                 <TextInput
                     style={styles.searchInput}
                     placeholder="Search your favourite pizza"
                     placeholderTextColor="#868686"
+                    editable={false}
                 />
-            </View>
+            </Pressable>
         </View>
     )
 }

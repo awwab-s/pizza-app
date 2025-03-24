@@ -11,7 +11,7 @@ const CartFooter = ({ totalBill }) => {
     <View style={styles.footer}>
       <View style={styles.totalContainer}>
         <Text style={styles.totalLabel}>Total Bill</Text>
-        <Text style={styles.totalAmount}>${totalBill}</Text>
+        <Text style={styles.totalAmount}>Rs. {totalBill}</Text>
       </View>
 
       <TouchableOpacity style={styles.placeOrderButton} onPress={() => navigation.navigate("Checkout")}>

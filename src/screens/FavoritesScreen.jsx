@@ -1,10 +1,12 @@
-import { View, Text, StyleSheet, SafeAreaView, FlatList } from "react-native";
+import { View, Text, StyleSheet, SafeAreaView, FlatList, Dimensions } from "react-native";
 import { useContext, useEffect, useState } from "react";
 import { PizzaItem } from "./HomeScreen";
 import { PizzaContext, getGoogleDriveImage } from "../context/PizzaContext";
 import { auth, db } from "../../firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
+const { width, height } = Dimensions.get("window");
 
 const FavoritesScreen = () => {
   const [userData, setUserData] = useState(null);
@@ -29,8 +31,7 @@ const FavoritesScreen = () => {
     fetchUserData();
   }, []);
 
-  // Ensure user and user.FavPizza exist
-  const favoritePizzaIds = userData?.FavPizza || [];
+  const favoritePizzaIds = userData?.favorites || [];
 
   // Filter pizzas that match user's favorite pizza IDs
   const favoritePizzas = pizzas.filter(pizza => favoritePizzaIds.includes(pizza.id));
@@ -67,7 +68,7 @@ const styles = StyleSheet.create({
     paddingTop: 24,
   },
   title: {
-    fontSize: 24,
+    fontSize: width * 0.06,
     fontWeight: "bold",
     color: "#0f0e0d",
   },

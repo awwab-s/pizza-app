@@ -13,27 +13,25 @@ import { auth, db } from "../../firebaseConfig";
 
 const { width, height } = Dimensions.get('window');
 
-export const PizzaItem = ({ imgURL, name, price, discountText }) => {
+export const PizzaItem = ({ imgURL, name, price, discountText, rating }) => {
   return (
     <View style={styles.pizzaItem}>
       <Image source={{ uri: imgURL}} style={styles.pizzaImage} />
       <View style={styles.pizzaDetails}>
         <View style={styles.pizzaNameContainer}>
-          <Text style={styles.pizzaName}>{name}</Text>
-          
-          <Icon name="heart" size={height * 0.024} color="#868686" />
-          
+          <Text style={styles.pizzaName}>{name} Pizza</Text>
+        </View>
+        <View style={styles.ratingContainer}>
+          <Text style={styles.ratingText}>{rating}</Text>
+          <MaterialIcons name="star" size={height * 0.024} color="#fcca18" />
         </View>
         
         <View style={styles.priceContainer}>
           <View style={styles.priceWrapper}>
-            <Text style={styles.price}>{price}</Text>
+            <Text style={styles.price}>Rs. {price}</Text>
             <View style={styles.discountBadge}>
               <Text style={styles.discountText}>{discountText}</Text>
             </View>
-          </View>
-          <View style={styles.addButton}>
-            <Icon name="plus" size={height * 0.02} color="#ffffff" />
           </View>
         </View>
       </View>
@@ -47,6 +45,9 @@ const HomeScreen = ({navigation}) => {
   const [loading, setLoading] = useState(false);
   const { pizzas, fetchPizzas } = useContext(PizzaContext);
 
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [filteredPizzas, setFilteredPizzas] = useState(pizzas);
+
   useEffect(() => {
     const checkGuestUser = async () => {
       const user = await AsyncStorage.getItem("user");
@@ -57,6 +58,15 @@ const HomeScreen = ({navigation}) => {
 
     checkGuestUser();
   }, []);
+
+  useEffect(() => {
+    // Filter pizzas based on selected category
+    if (selectedCategory === 'All') {
+      setFilteredPizzas(pizzas);
+    } else {
+      setFilteredPizzas(pizzas.filter(pizza => pizza.category === selectedCategory));
+    }
+  }, [selectedCategory, pizzas]);
 
   // Function to request location permission
   const requestLocationPermission = async () => {
@@ -189,12 +199,12 @@ const HomeScreen = ({navigation}) => {
         <View style={styles.offerContainer}>
           <View style={styles.offerContent}>
             <Text style={styles.offerTitle}>Special Offer</Text>
-            <Text style={styles.offerSubtitle}>Discount 20% off applied at checkout</Text>
+            <Text style={styles.offerSubtitle}>Discount 25% off for all pizzas.</Text>
             <TouchableOpacity style={styles.orderButton}>
               <Text style={styles.orderButtonText}>Order Now</Text>
             </TouchableOpacity>
           </View>
-          <Image source={require('../assets/welcome_pizza.png')} style={styles.offerImage} />
+          <Image source={require('../assets/special_offer_pizza.png')} style={styles.offerImage} />
         </View>
 
         {/* Popular Pizza */}
@@ -206,25 +216,19 @@ const HomeScreen = ({navigation}) => {
         </View>
 
         {/* Categories */}
-        <Category />
+        <Category selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
 
         {/* Pizza Items */}
         <View style={styles.pizzaItemsContainer}>
-          {/* Pepperoni Pizza */}
           <FlatList
-                    data={pizzas}
-                    keyExtractor={(item) => item.id}
-                    renderItem={({ item }) => (
-                      <TouchableOpacity onPress={() => navigation.navigate('PizzaOrder', { pizza: item })}>
-                        <PizzaItem imgURL={ getGoogleDriveImage(item.imageURL) } name= {item.name} price={item.basePrice} discountText="25% Off" />
-                      </TouchableOpacity>
-                    )}
-                  />
-          
-
-          {/* Margherita Pizza */}
-          {/*<PizzaItem imgURL={require('../assets/welcome_pizza.png')} name="Margherita Pizza" price="$8.00" discountText="20% Off" />*/}
-          
+            data={filteredPizzas}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <TouchableOpacity onPress={() => navigation.navigate('PizzaOrder', { pizza: item })}>
+                <PizzaItem imgURL={ getGoogleDriveImage(item.imageURL) } name= {item.name} price={item.basePrice} discountText="25% Off" rating={item.rating} />
+              </TouchableOpacity>
+            )}
+          />
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -315,10 +319,10 @@ const styles = StyleSheet.create({
     fontSize: height * 0.016,
   },
   offerImage: {
-    width: height * 0.180,
-    height: height * 0.200,
+    width: height * 0.19,
+    height: height * 0.19,
     position: "absolute",
-    right: -(width * 0.020),
+    right: 0,
   },
   sectionHeader: {
     flexDirection: "row",
@@ -353,11 +357,12 @@ const styles = StyleSheet.create({
   pizzaImage: {
     width: height * 0.112,
     height: height * 0.112,
-    borderRadius: height * 0.056,
   },
   pizzaDetails: {
     marginLeft: width * 0.016,
     flex: 1,
+    padding: height * 0.005,
+    justifyContent: "center",
   },
   pizzaNameContainer: {
     flexDirection: "row",
@@ -365,7 +370,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   pizzaName: {
-    fontSize: height * 0.020,
+    fontSize: height * 0.022,
     fontWeight: "bold",
     color: "#0f0e0d",
   },
@@ -388,10 +393,17 @@ const styles = StyleSheet.create({
     color: "#868686",
     marginHorizontal: width * 0.008,
   },
-  rating: {
-    fontSize: height * 0.014,
-    color: "#868686",
-    marginRight: width * 0.004,
+  ratingContainer: {
+    position: "absolute",
+    right: 0,
+    top: 0,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  ratingText: {
+    fontSize: width * 0.04,
+    fontWeight: "500",
+    marginRight: width * 0.01,
   },
   priceContainer: {
     flexDirection: "row",
@@ -402,22 +414,23 @@ const styles = StyleSheet.create({
   priceWrapper: {
     flexDirection: "row",
     alignItems: "center",
+    gap: width * 0.02,
   },
   price: {
     fontSize: height * 0.020,
     fontWeight: "bold",
-    color: "#0f0e0d",
+    color: "#B55638",
   },
   discountBadge: {
     backgroundColor: "#B55638",
     paddingHorizontal: height * 0.008,
     paddingVertical: height * 0.004,
     borderRadius: height * 0.030,
-    marginLeft: width * 0.008,
   },
   discountText: {
     fontSize: height * 0.012,
     color: "#ffffff",
+    fontWeight: "600",
   },
   addButton: {
     backgroundColor: "#0f0e0d",

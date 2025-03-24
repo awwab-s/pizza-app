@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: "center",
     fontSize: scale(24),
-    fontWeight: "500",
+    fontWeight: "bold",
     color: "#121212",
   },
   placeholder: {

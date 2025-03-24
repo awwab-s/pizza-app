@@ -1,6 +1,6 @@
 import { View, Image, TouchableOpacity, StyleSheet, Dimensions } from "react-native"
 import Icon from "react-native-vector-icons/Feather"
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import Heart from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from "react-native-vector-icons/MaterialIcons"
 import { useNavigation } from "@react-navigation/native";
 
@@ -15,12 +15,12 @@ const Header = ({ isFavorite, setIsFavorite, imgURL }) => {
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.favoriteButton} onPress={() => setIsFavorite(!isFavorite)}>
-        {isFavorite ? <Ionicons
+        {isFavorite ? <Heart
           name="heart"
           size={width * 0.05}
           color={"#d00000"}
-        /> : <Ionicons
-          name="heart-outline"
+        /> : <Heart
+          name="hearto"
           size={width * 0.05}
           color={"#d00000"} />}
       </TouchableOpacity>

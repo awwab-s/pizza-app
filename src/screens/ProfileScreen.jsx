@@ -81,14 +81,6 @@ const ProfileScreen = () => {
     fetchUserData(); // Refresh user data when the button is pressed
   };
 
-  // if (loading) {
-  //   return (
-  //     <SafeAreaView style={styles.container}>
-  //       <ActivityIndicator size="large" color="#B55638" style={{ marginTop: height * 0.3 }} />
-  //     </SafeAreaView>
-  //   );
-  // }
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>

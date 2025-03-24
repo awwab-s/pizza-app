@@ -1,9 +1,11 @@
-import { useState } from "react"
-import { View, StyleSheet, ScrollView, Dimensions } from "react-native"
+import { useState, useEffect } from "react"
+import { View, Text, StyleSheet, ScrollView, Dimensions } from "react-native"
 import CartHeader from "../components/CartHeader"
 import CartItem from "../components/CartItem"
 import CartFooter from "../components/CartFooter"
 import { useNavigation } from "@react-navigation/native"
+import { collection, getDoc, doc } from "firebase/firestore"
+import { auth, db } from "../../firebaseConfig"
 
 const { width, height } = Dimensions.get("window")
 
@@ -12,35 +14,34 @@ const scale = (size) => (width / 375) * size
 
 const CartScreen = ({pizza, price, size}) => {
   const navigation = useNavigation()
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      name: "Margarita",
-      description: "Large | Cheese, onion, and tomato pure",
-      price: 57,
-      quantity: 1,
-      image:
-        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Labs__Copy___Copy_-kFHbBe5io7uOheKG8WCEWqCO3EHU9R.png", // Replace with actual image path
-    },
-    {
-      id: 2,
-      name: "Tomato",
-      description: "Large | Fresh tomatos, Basil & green herbs",
-      price: 57,
-      quantity: 1,
-      image:
-        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Labs__Copy___Copy_-kFHbBe5io7uOheKG8WCEWqCO3EHU9R.png", // Replace with actual image path
-    },
-    {
-      id: 3,
-      name: "Margarita",
-      description: "Large | Cheese, onion, and tomato pure",
-      price: 57,
-      quantity: 1,
-      image:
-        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Labs__Copy___Copy_-kFHbBe5io7uOheKG8WCEWqCO3EHU9R.png", // Replace with actual image path
-    },
-  ])
+  const [cartItems, setCartItems] = useState([])
+
+  useEffect(() => {
+    const fetchCartItems = async () => {
+      const user = auth.currentUser
+      console.log("User:", user.uid)
+
+      if (!user) {
+        alert("Please sign in to view your cart.")
+        navigation.navigate("SignIn")
+        return
+      }
+
+      try {
+        const userDocRef = doc(db, "users", user.uid)
+        const userDocSnap = await getDoc(userDocRef)
+
+        const cartData = userDocSnap.data().cart
+
+        setCartItems(cartData)
+        console.log("Fetched cart data:", cartData)
+      } catch (error) {
+        console.error("Error fetching cart data:", error)
+      }
+    }
+
+    fetchCartItems()
+  }, [])
 
   const updateQuantity = (id, newQuantity) => {
     if (newQuantity < 1) return
@@ -59,9 +60,15 @@ const CartScreen = ({pizza, price, size}) => {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {cartItems.map((item) => (
-          <CartItem key={item.id} item={item} onUpdateQuantity={updateQuantity} />
-        ))}
+        {cartItems.length > 0 ? (
+          cartItems.map((item) => (
+            <CartItem key={item.id} item={item} onUpdateQuantity={updateQuantity} />
+          ))
+        ) : (
+          <View style={styles.emptyCartContainer}>
+            <Text style={styles.emptyCartText}>Your cart is empty!</Text>
+          </View>
+        )}
       </ScrollView>
 
       <CartFooter totalBill={totalBill} />
@@ -80,7 +87,18 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingHorizontal: scale(16),
     paddingBottom: scale(16),
-    gap: scale(16),
+    gap: 2
+  },
+  emptyCartContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 24,
+  },
+  emptyCartText: {
+    fontSize: 16,
+    color: "#868686",
+    textAlign: "center",
   },
 })
 

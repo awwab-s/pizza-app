@@ -2,6 +2,7 @@ import { useRef } from "react"
 import { View, Text, Image, StyleSheet, Dimensions, Animated, PanResponder, TouchableOpacity } from "react-native"
 import Icon from "react-native-vector-icons/Feather"
 import QuantityControl from "./QuantityControl"
+import { getGoogleDriveImage } from "../context/PizzaContext"
 
 const { width } = Dimensions.get("window")
 const scale = (size) => (width / 375) * size
@@ -18,50 +19,55 @@ const CartItem = ({ item, onUpdateQuantity }) => {
         return Math.abs(gestureState.dx) > 5
       },
       onPanResponderMove: (_, gestureState) => {
-        // Only allow right swipe (positive dx) up to deleteButtonWidth
         if (gestureState.dx > 0) {
           translateX.setValue(Math.min(gestureState.dx, deleteButtonWidth))
         } else {
-          // Allow left swipe to close
           translateX.setValue(Math.max(gestureState.dx, 0))
         }
       },
       onPanResponderRelease: (_, gestureState) => {
         if (gestureState.dx > SWIPE_THRESHOLD) {
-          // Swipe right - show delete button
           Animated.spring(translateX, {
             toValue: deleteButtonWidth,
             useNativeDriver: true,
           }).start()
         } else {
-          // Swipe left or not enough - hide delete button
           Animated.spring(translateX, {
             toValue: 0,
             useNativeDriver: true,
           }).start()
         }
       },
-    }),
+    })
   ).current
 
   return (
     <View style={styles.container}>
-      {/* Delete button (behind the card) */}
+      {/* Delete button */}
       <View style={[styles.deleteContainer, { width: deleteButtonWidth }]}>
         <TouchableOpacity style={styles.deleteButton}>
           <Icon name="trash-2" size={scale(24)} color="white" />
         </TouchableOpacity>
       </View>
 
-      {/* Card content */}
+      {/* Card */}
       <Animated.View style={[styles.card, { transform: [{ translateX }] }]} {...panResponder.panHandlers}>
-        <Image source={{ uri: item.image }} style={styles.image} />
+        <Image source={{ uri: getGoogleDriveImage(item.imageURL) }} style={styles.image} />
 
         <View style={styles.contentContainer}>
           <View style={styles.infoContainer}>
-            <Text style={styles.name}>{item.name}</Text>
-            <Text style={styles.description}>{item.description}</Text>
-            <Text style={styles.price}>${item.price}</Text>
+            <Text style={styles.name}>{item.name} Pizza</Text>
+            <Text style={styles.description}>{item.size} Size | {item.crust} Crust</Text>
+            <Text 
+              style={[styles.toppings, Array.isArray(item.toppings) && item.toppings.length > 0 ? {} : styles.noToppings]}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            > 
+              {Array.isArray(item.toppings) && item.toppings.length > 0
+                ? `${item.toppings.join(", ")}`
+                : "No extra toppings"}
+            </Text>
+            <Text style={styles.price}>Rs. {item.price}</Text>
           </View>
 
           <QuantityControl
@@ -86,7 +92,7 @@ const styles = StyleSheet.create({
     left: 0,
     top: 0,
     bottom: 0,
-    backgroundColor: "#b55638",
+    backgroundColor: "#d32f2f",
     borderTopLeftRadius: scale(24),
     borderBottomLeftRadius: scale(24),
     justifyContent: "center",
@@ -112,7 +118,7 @@ const styles = StyleSheet.create({
   image: {
     width: scale(100),
     height: scale(100),
-    borderRadius: scale(50),
+    borderRadius: scale(12),
   },
   contentContainer: {
     flex: 1,
@@ -124,21 +130,30 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: scale(18),
-    fontWeight: "500",
-    color: "#121212",
-    marginBottom: scale(4),
+    fontWeight: "600",
+    color: "#333",
+    marginBottom: scale(5),
   },
   description: {
     fontSize: scale(14),
-    color: "#434343",
-    marginBottom: scale(8),
+    color: "#666",
+    marginBottom: scale(4),
+  },
+  toppings: {
+    fontSize: scale(12),
+    color: "#888",
+    marginBottom: scale(10),
   },
   price: {
-    fontSize: scale(18),
-    fontWeight: "600",
-    color: "#121212",
+    fontSize: scale(16),
+    fontWeight: "bold",
+    color: "#d32f2f",
   },
+  noToppings: {
+    fontStyle: "italic",
+    color: "#888",
+    marginBottom: scale(10),
+  }
 })
 
 export default CartItem
-

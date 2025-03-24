@@ -4,7 +4,7 @@ const { width } = Dimensions.get("window")
 
 const RadioButton = ({ selected, label, price, onPress, isLast }) => {
   return (
-    <TouchableOpacity style={[styles.container, !isLast && styles.borderBottom]} onPress={onPress}>
+    <TouchableOpacity style={[styles.container]} onPress={onPress}>
       <View style={styles.leftContent}>
         <View style={[styles.radio, selected && styles.radioSelected]}>
           {selected && <View style={styles.radioInner} />}

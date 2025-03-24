@@ -3,7 +3,7 @@ import Icon from "react-native-vector-icons/Feather"
 import { View, Text, StyleSheet, SafeAreaView, TextInput, FlatList, TouchableOpacity, Dimensions } from "react-native";
 import { PizzaContext, getGoogleDriveImage } from "../context/PizzaContext";
 import { useNavigation } from "@react-navigation/native";
-import {PizzaItem} from "./HomeScreen"
+import { PizzaItem } from "./HomeScreen"
 
 const { width, height } = Dimensions.get('window');
 
@@ -45,8 +45,8 @@ const SearchScreen = () => {
           data={filteredPizzas}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => navigation.navigate('PizzaOrder', { pizza: item })}>
-              <PizzaItem imgURL={ getGoogleDriveImage(item.imageURL) } name= {item.name} price={item.basePrice} discountText="25% Off" />
+            <TouchableOpacity onPress={() => navigation.navigate('PizzaOrder', { pizza: item })} >
+              <PizzaItem imgURL={ getGoogleDriveImage(item.imageURL) } name= {item.name} price={item.basePrice} discountText="25% Off" rating={item.rating} />
             </TouchableOpacity>
           )}
           ListEmptyComponent={<Text style={styles.emptyText}>No pizzas found</Text>}
@@ -60,12 +60,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+    backgroundColor: "#fff",
   },
   header: {
     marginBottom: 10,
+    marginLeft: width * 0.02,
   },
   title: {
-    fontSize: 24,
+    fontSize: width * 0.06,
     fontWeight: "bold",
   },
 
@@ -80,6 +82,7 @@ const styles = StyleSheet.create({
     borderRadius: 35,
     paddingHorizontal: width * 0.020,
     paddingVertical: height * 0.01,
+    marginBottom: height * 0.02,
   },
   searchIcon: {
     marginLeft: width * 0.03,

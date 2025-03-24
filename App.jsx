@@ -23,7 +23,7 @@ import FavoritesScreen from "./src/screens/FavoritesScreen";
 import ProfileScreen from "./src/screens/ProfileScreen";
 import uploadPizzas from "./src/data/uploadPizzas";
 import DetailsScreen from "./src/screens/DetailsScreen";
-import PizzaOrder from "./src/screens/PizzaOrder";
+import PizzaOrderScreen from "./src/screens/PizzaOrderScreen";
 import CheckoutScreen from "./src/screens/CheckoutScreen";
 
 const Stack = createStackNavigator();
@@ -121,7 +121,7 @@ const App = () => {
         <Stack.Screen name="SignIn" component={SignInScreen} />
         <Stack.Screen name="SignUp" component={SignUpScreen} />
         <Stack.Screen name="Cart" component={CartScreen} />
-        <Stack.Screen name="PizzaOrder" component={PizzaOrder} />
+        <Stack.Screen name="PizzaOrder" component={PizzaOrderScreen} />
         <Stack.Screen name="Checkout" component={CheckoutScreen} />
         <Stack.Screen name="Main" component={BottomTabs} />
       </Stack.Navigator>

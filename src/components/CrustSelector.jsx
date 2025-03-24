@@ -8,15 +8,15 @@ const CrustSelector = ({ crust, setCrust, prices }) => {
       <SectionHeader title="Select Crust" required={true} />
 
       <View style={styles.optionsContainer}>
-        <RadioButton selected={crust === "classic"} label="Classic Hand tossed" onPress={() => setCrust("classic")} />
+        <RadioButton selected={crust === "Classic"} label="Classic Hand Tossed" onPress={() => setCrust("Classic")} />
 
-        <RadioButton selected={crust === "thin"} label="Thin Crust" onPress={() => setCrust("thin")} />
+        <RadioButton selected={crust === "Thin"} label="Thin Crust" onPress={() => setCrust("Thin")} />
 
         <RadioButton
-          selected={crust === "cheese"}
+          selected={crust === "Cheese"}
           label="Cheese Brust"
-          price={`+ $${prices.cheeseCrust.toFixed(2)}`}
-          onPress={() => setCrust("cheese")}
+          price={`+ Rs. ${prices["Cheese Crust"].toFixed(2)}`}
+          onPress={() => setCrust("Cheese")}
           isLast={true}
         />
       </View>

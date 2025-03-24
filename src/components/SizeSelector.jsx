@@ -9,24 +9,24 @@ const SizeSelector = ({ size, setSize, pizzasize}) => {
       
       <View style={styles.optionsContainer}>
         <RadioButton 
-          selected={pizzasize === 'small'} 
-          label="Small - 6"
-          price={`$${size["small"]}`}
-          onPress={() => setSize('small')} 
+          selected={pizzasize === 'Small'} 
+          label={`Small - 6"`}
+          price={`Rs. ${size["small"]}`}
+          onPress={() => setSize('Small')} 
         />
         
         <RadioButton 
-          selected={pizzasize === 'medium'} 
-          label="Medium - 10" 
-          price={`$${size["medium"]}`}
-          onPress={() => setSize('medium')} 
+          selected={pizzasize === 'Medium'} 
+          label={`Medium - 10"`} 
+          price={`Rs. ${size["medium"]}`}
+          onPress={() => setSize('Medium')} 
         />
         
         <RadioButton 
-          selected={pizzasize === 'large'} 
-          label="Large - 14" 
-          price={`$${size["large"]}`}
-          onPress={() => setSize('large')} 
+          selected={pizzasize === 'Large'} 
+          label={`Large - 14"`} 
+          price={`Rs. ${size["large"]}`}
+          onPress={() => setSize('Large')} 
           isLast={true}
         />
       </View>

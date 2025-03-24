@@ -10,33 +10,36 @@ import { getGoogleDriveImage } from "../context/PizzaContext"
 
 const { width } = Dimensions.get("window")
 
-const PizzaOrder = ({ route }) => {
+const PizzaOrderScreen = ({ route }) => {
   const { pizza } = route.params;
-  const [size, setSize] = useState("medium")
-  const [crust, setCrust] = useState("cheese")
+  const [size, setSize] = useState("Medium")
+  const [crust, setCrust] = useState("Cheese")
   const [toppings, setToppings] = useState([])
   const [isFavorite, setIsFavorite] = useState(false)
 
   const prices = {
-    cheeseCrust: 1.5,
-    extraCheese: 2.5,
-    mushroom: 2.5,
+    "Cheese Crust": 150,
+    "Extra Cheese": 100,
+    "Extra Sauce": 70,
+    "Extra Olives": 50,
+    "Extra Mushrooms": 50,
   }
 
   const calculateTotal = () => {
     let total = 0
 
     // Add size price
-    if (size === "small") total += pizza.size["small"]
-    if (size === "medium") total += pizza.size["medium"]
-    if (size === "large") total += pizza.size["large"]
+    if (size === "Small") total += pizza.size["small"]
+    if (size === "Medium") total += pizza.size["medium"]
+    if (size === "Large") total += pizza.size["large"]
 
     // Add cheese crust price
-    if (crust === "cheese") total += prices.cheeseCrust
+    if (crust === "Cheese") total += prices["Cheese Crust"]
 
     // Add toppings
-    if (toppings.includes("extraCheese")) total += prices.extraCheese
-    if (toppings.includes("mushroom")) total += prices.mushroom
+    toppings.forEach((topping) => {
+      if (prices[topping]) total += prices[topping]
+    })
 
     return total.toFixed(2)
   }
@@ -56,15 +59,27 @@ const PizzaOrder = ({ route }) => {
         <View style={styles.content}>
           <PizzaInfo pizza = {pizza}/>
 
+          <View style={styles.divider} />
+
           <SizeSelector size={pizza.size} setSize={setSize} pizzasize={size}/>
 
+          <View style={styles.divider} />
+
           <CrustSelector crust={crust} setCrust={setCrust} prices={prices} />
+
+          <View style={styles.divider} />
 
           <ToppingsSelector toppings={toppings} handleToppingChange={handleToppingChange} prices={prices} />
         </View>
       </ScrollView>
 
-      <Footer total={calculateTotal()} pizza={pizza} size={size} />
+      <Footer 
+        total={calculateTotal()} 
+        pizza={pizza} 
+        size={size} 
+        crust={crust} 
+        toppings={toppings} 
+      />
     </View>
   )
 }
@@ -78,7 +93,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: width * 0.06,
     paddingBottom: width * 0.06,
   },
+  divider: {
+    height: 1,
+    backgroundColor: "#DDD",
+    width: "100%",
+    alignSelf: "center",
+  },
 })
 
-export default PizzaOrder
+export default PizzaOrderScreen
 

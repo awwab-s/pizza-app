@@ -35,6 +35,7 @@ const SignInScreen = ({ navigation }) => {
       const user = userCredential.user;
       
       console.log("Google Sign-In Successful!");
+      Alert.alert("Success", "User logged in!");
 
       // Check if user already exists in Firestore
       const userRef = doc(db, "users", user.uid);
@@ -52,7 +53,6 @@ const SignInScreen = ({ navigation }) => {
           favorites: [],
         });
         console.log("User added to Firestore!");
-        Alert.alert("Success", "User account created!");
       } else {
         console.log("User already exists in Firestore");
       }

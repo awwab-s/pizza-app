@@ -9,17 +9,31 @@ const ToppingsSelector = ({ toppings, handleToppingChange, prices }) => {
 
       <View style={styles.optionsContainer}>
         <Checkbox
-          selected={toppings.includes("extraCheese")}
+          selected={toppings.includes("Extra Cheese")}
           label="Add Extra Cheese"
-          price={`+ $${prices.extraCheese.toFixed(2)}`}
-          onPress={() => handleToppingChange("extraCheese")}
+          price={`+ Rs. ${prices["Extra Cheese"].toFixed(2)}`}
+          onPress={() => handleToppingChange("Extra Cheese")}
         />
 
         <Checkbox
-          selected={toppings.includes("mushroom")}
-          label="Add Mashroom"
-          price={`+ $${prices.mushroom.toFixed(2)}`}
-          onPress={() => handleToppingChange("mushroom")}
+          selected={toppings.includes("Extra Sauce")}
+          label="Add Extra Sauce"
+          price={`+ Rs. ${prices["Extra Sauce"].toFixed(2)}`}
+          onPress={() => handleToppingChange("Extra Sauce")}
+        />
+
+        <Checkbox
+          selected={toppings.includes("Extra Olives")}
+          label="Add Extra Olives"
+          price={`+ Rs. ${prices["Extra Olives"].toFixed(2)}`}
+          onPress={() => handleToppingChange("Extra Olives")}
+        />
+
+        <Checkbox
+          selected={toppings.includes("Extra Mushrooms")}
+          label="Add Extra Mushroom"
+          price={`+ Rs. ${prices["Extra Mushrooms"].toFixed(2)}`}
+          onPress={() => handleToppingChange("Extra Mushrooms")}
           isLast={true}
         />
       </View>

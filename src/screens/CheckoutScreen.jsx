@@ -9,11 +9,11 @@ export default function CheckoutScreen() {
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
-      <LottieView style = {styles.loading} source={require('../assets/delivery.json')} autoPlay loop />
+      <LottieView style = {styles.loading} source={require('../data/delivery.json')} autoPlay loop />
       <Text style={{fontSize: height*0.020, fontWeight: 'bold', color: '#dd714e'}}>Your pizza is on the way!</Text>
       <Text style={{fontSize: height*0.030, fontWeight: 'bold', color: '#868686'}}>Order # 12447</Text>
       <TouchableOpacity style={styles.Button} onPress={() => navigation.navigate("Main")}>
-        <Text style={styles.ButtonText}>Go Back</Text>
+        <Text style={styles.ButtonText}>Go to Home</Text>
       </TouchableOpacity>
 
     </View>
@@ -39,12 +39,12 @@ const styles = StyleSheet.create({
     width: width * 0.9, 
     borderRadius: 25, 
     alignItems: 'center', 
-    marginTop: 10 
+    marginTop: 30 
   },
 
   ButtonText: { 
     color: '#fff', 
     fontSize: 14, 
-    fontWeight: 'bold' 
+    fontWeight: 'bold'
   },
 });

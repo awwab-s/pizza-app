@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect } from "react";
 import { collection, query, orderBy, getDocs } from "firebase/firestore";
-import { db } from "../../firebaseConfig"; // Adjust this import based on your project structure
+import { db } from "../../firebaseConfig";
 
 // Create the context
 export const PizzaContext = createContext();
