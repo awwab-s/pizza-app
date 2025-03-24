@@ -10,6 +10,7 @@ const { width, height } = Dimensions.get("window")
 
 const OrderHeader = ({ pizza, imgURL }) => {
   const [isFavorite, setIsFavorite] = useState(false)
+  const [isGuest, setIsGuest] = useState(false)
   const navigation = useNavigation()
 
   // Fetch favorite status for the current pizza
@@ -19,6 +20,7 @@ const OrderHeader = ({ pizza, imgURL }) => {
 
       if (!user) {
         console.log("User is not signed in. Cannot fetch favorite status.");
+        setIsGuest(true);
         return;
       }
 
@@ -43,15 +45,9 @@ const OrderHeader = ({ pizza, imgURL }) => {
     const toggleFavorite = async () => {
       const user = auth.currentUser;
 
-      if (!user) { 
-        Alert.alert("Login Required", "Please sign in to favorite pizzas.");
-        navigation.navigate("SignIn");
-        return;
-      }
-
       try {
         const userRef = doc(db, "users", user.uid);
-  
+        
         if (isFavorite) {
           // If already a favorite, remove it from favorites
           await updateDoc(userRef, {
@@ -77,7 +73,11 @@ const OrderHeader = ({ pizza, imgURL }) => {
         <Icon name="chevron-left" size={width * 0.05} color="#8e8e8e" />
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.favoriteButton} onPress={toggleFavorite}>
+      <TouchableOpacity 
+        disabled={isGuest} // Disable button for guests
+        style={[styles.favoriteButton, { opacity: isGuest ? 0.5 : 1 }]}
+        onPress={toggleFavorite}
+      >
         {isFavorite ? <Heart
           name="heart"
           size={width * 0.05}

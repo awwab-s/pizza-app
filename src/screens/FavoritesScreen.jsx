@@ -5,20 +5,21 @@ import PizzaList from "../components/PizzaList";
 import { PizzaContext, getGoogleDriveImage } from "../context/PizzaContext";
 import { auth, db } from "../../firebaseConfig";
 import { doc, getDoc, updateDoc, arrayRemove } from "firebase/firestore";
-
+import { useNavigation } from "@react-navigation/native";
 const { width, height } = Dimensions.get("window");
 
 const FavoritesScreen = () => {
   const [userData, setUserData] = useState(null);
   const { pizzas, fetchPizzas } = useContext(PizzaContext);
   const [loadingPizzas, setLoadingPizzas] = useState(true);
+  const navigation = useNavigation();
 
   const fetchUserData = async () => {
     try {      
       const user = auth.currentUser;
       if (!user) {
         alert("Please sign in to view favorites.");
-        navigation.navigate("SignIn");
+        navigation.replace("SignIn");
         return;
       }
 

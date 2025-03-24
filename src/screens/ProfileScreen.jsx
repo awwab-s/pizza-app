@@ -25,7 +25,7 @@ const ProfileScreen = () => {
       if (user === "guest") {
         setIsGuest(true);
         Alert.alert("Login Required", "Please sign in to view your profile.");
-        navigation.replace("Main");
+        navigation.replace("SignIn");
       }
     };
 

@@ -24,7 +24,7 @@ const CartScreen = ({pizza, price, size}) => {
 
       if (!user) {
         alert("Please sign in to view your cart.")
-        navigation.navigate("SignIn")
+        navigation.replace("SignIn");
         return
       }
 

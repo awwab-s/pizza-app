@@ -49,6 +49,7 @@ const SearchScreen = () => {
               <PizzaItem imgURL={ getGoogleDriveImage(item.imageURL) } name= {item.name} price={item.basePrice} discountText="25% Off" rating={item.rating} />
             </TouchableOpacity>
           )}
+          showsVerticalScrollIndicator={false}
           ListEmptyComponent={<Text style={styles.emptyText}>No pizzas found</Text>}
         />
       )}
