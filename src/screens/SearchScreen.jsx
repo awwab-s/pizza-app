@@ -26,6 +26,8 @@ const SearchScreen = () => {
         <Text style={styles.title}>Search</Text>
       </View>
 
+      <View style={styles.divider} />
+
       {/* Search Input */}
       <View style={styles.searchContainer}>
         <View style={styles.searchBar}>
@@ -41,17 +43,19 @@ const SearchScreen = () => {
 
       {/* Show results only if user has typed something */}
       {searchQuery.trim() !== "" && (
-        <FlatList
-          data={filteredPizzas}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => navigation.navigate('PizzaOrder', { pizza: item })} >
-              <PizzaItem imgURL={ getGoogleDriveImage(item.imageURL) } name= {item.name} price={item.basePrice} discountText="25% Off" rating={item.rating} />
-            </TouchableOpacity>
-          )}
-          showsVerticalScrollIndicator={false}
-          ListEmptyComponent={<Text style={styles.emptyText}>No pizzas found</Text>}
-        />
+        <View style={styles.contentContainer}>
+          <FlatList
+            data={filteredPizzas}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => (
+              <TouchableOpacity onPress={() => navigation.navigate('PizzaOrder', { pizza: item })} >
+                <PizzaItem imgURL={ getGoogleDriveImage(item.imageURL) } name= {item.name} price={item.basePrice} discountText="25% Off" rating={item.rating} />
+              </TouchableOpacity>
+            )}
+            showsVerticalScrollIndicator={false}
+            ListEmptyComponent={<Text style={styles.emptyText}>No pizzas found</Text>}
+          />
+        </View>
       )}
     </SafeAreaView>
   );
@@ -60,21 +64,26 @@ const SearchScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
     backgroundColor: "#fff",
   },
   header: {
-    marginBottom: 10,
-    marginLeft: width * 0.02,
+    paddingHorizontal: width * 0.06,
+    paddingTop: height * 0.03,
+    marginBottom: height * 0.02,
   },
   title: {
     fontSize: width * 0.06,
     fontWeight: "bold",
   },
-
+  divider: {
+    height: 1,
+    backgroundColor: "#DDD",
+    marginBottom: height * 0.02,
+    width: "90%",
+    alignSelf: "center",
+  },
   searchContainer: {
-    paddingHorizontal: width * 0.024,
-    marginTop: height * 0.024,
+    paddingHorizontal: width * 0.04,
   },
   searchBar: {
     flexDirection: "row",
@@ -92,6 +101,10 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: width * 0.04,
     marginLeft: width * 0.01,
+  },
+  contentContainer: {
+    flex: 1,
+    paddingHorizontal: width * 0.04,
   },
   emptyText: {
     textAlign: "center",

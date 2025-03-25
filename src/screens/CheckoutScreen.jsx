@@ -61,7 +61,7 @@ const CheckoutScreen = () => {
         {pizzas_ordered.map((pizza, index) => (
           <View key={index} style={styles.item}>
             <View style={styles.itemHeader}>
-              <Text style={styles.pizzaName}>{pizza.name}</Text>
+              <Text style={styles.pizzaName}>{pizza.name} Pizza</Text>
               <Text style={styles.pizzaPrice}>Rs. {pizza.price}</Text>
             </View>
             <Text style={[styles.quantityText, { color: '#333' }]}>Quantity: <Text style={styles.quantityText}>{pizza.quantity}</Text></Text>

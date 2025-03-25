@@ -3,15 +3,40 @@ import Icon from "react-native-vector-icons/Feather"
 import { useNavigation } from "@react-navigation/native"
 import { collection, doc, setDoc, getDoc, getDocs, query, where, Timestamp } from "firebase/firestore"
 import { auth, db } from "../../firebaseConfig"
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 
 const { width, height } = Dimensions.get("window")
 const scale = (size) => (width / 375) * size
 
 const CartFooter = ({ totalBill, cartItems }) => {
+  const [userData, setUserData] = useState(null);
   const [phoneNumber, setPhoneNumber] = useState("")
   const [modalVisible, setModalVisible] = useState(false)
   const navigation = useNavigation()
+
+  useEffect(() => {
+    // Function to fetch user data from Firestore
+    const fetchUserData = async () => {
+      try {
+        // Get the current user from Firebase Authentication
+        const user = auth.currentUser;
+
+        // Fetch user data from Firestore using current user's UID
+        const userDocRef = doc(db, "users", user.uid);
+        const userDocSnap = await getDoc(userDocRef);
+
+        if (userDocSnap.exists()) {
+          setUserData(userDocSnap.data()); // Set user data into state
+        } else {
+          console.log("No user data found!");
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   const generateUniqueOrderID = async () => {
     let orderID
@@ -35,29 +60,27 @@ const CartFooter = ({ totalBill, cartItems }) => {
   const placeOrder  = async () => {
     const user = auth.currentUser
 
+    if (!userData) {
+      console.error("User data not available!");
+      return;
+  }
+
     try {
       const orderID = await generateUniqueOrderID()
-
-      const userDocRef = doc(db, "users", user.uid)
-      const userDocSnap = await getDoc(userDocRef)
-
-      const userData = userDocSnap.data()
-      const deliveryAddress = userData.address || "No address provided"
-
       const orderData = {
         order_id: orderID,
         user_id: user.uid,
         order_time: Timestamp.now(),
         total_bill: totalBill,
         pizzas_ordered: cartItems,
-        delivery_address: deliveryAddress,
+        delivery_address: userData.address || "No address provided",
         phone_number: phoneNumber,
         status: "Pending",
       }
 
       await setDoc(doc(db, "orders", orderID.toString()), orderData)
 
-      alert("Order placed successfully!")
+      Alert.alert("Success", "Your order has been placed successfully!")
       console.log("Order placed successfully!", orderData),
 
       // Clear the cart in Firestore
@@ -74,6 +97,12 @@ const CartFooter = ({ totalBill, cartItems }) => {
     if (cartItems.length === 0) {
       Alert.alert("Empty Cart", "Your cart is empty.")
       return
+    }
+
+    if (!userData?.address) {
+      Alert.alert("Address Required", "Please set your address before placing an order.");
+      navigation.navigate("Main");
+      return;
     }
   
     Alert.alert(
@@ -194,7 +223,7 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: scale(18),
     fontWeight: "600",
-    marginBottom: scale(10),
+    marginBottom: scale(15),
   },
   input: {
     width: "100%",
@@ -203,13 +232,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: scale(10),
     paddingLeft: scale(10),
-    marginBottom: scale(20),
+    marginBottom: scale(15),
   },
   submitButton: {
     backgroundColor: "#b55638",
-    borderRadius: scale(10),
+    borderRadius: scale(20),
     paddingVertical: scale(10),
-    paddingHorizontal: scale(30),
+    paddingHorizontal: scale(20),
   },
   submitButtonText: {
     fontSize: scale(16),

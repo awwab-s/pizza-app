@@ -54,7 +54,9 @@ const ProfileScreen = () => {
       const user = auth.currentUser;
 
       const ordersRef = collection(db, "orders");
-      const querySnapshot = await getDocs(ordersRef);
+      const q = query(ordersRef, where("user_id", "==", user.uid));
+      const querySnapshot = await getDocs(q);
+
       const ordersList = [];
       querySnapshot.forEach((doc) => {
         ordersList.push({ id: doc.id, ...doc.data() });
@@ -102,7 +104,7 @@ const ProfileScreen = () => {
 
   const handleRefresh = () => {
     fetchUserData(); // Refresh user data when the button is pressed
-    fetchUserOrders
+    fetchUserOrders();
   };
 
   const handleOrderClick = (orderID) => {

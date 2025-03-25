@@ -50,6 +50,12 @@ const SignUpScreen = ({ navigation }) => {
       console.error("Sign-Up Error:", error);
       if (error.code === "auth/email-already-in-use") {
         Alert.alert("Error", "This email is already in use. Try logging in.");
+      } else if (error.code === "auth/invalid-email") {
+        Alert.alert("Error", "Please enter a valid email address.");
+      } else if (error.code === "auth/weak-password") {
+        Alert.alert("Error", "Password should be at least 6 characters.");
+      } else {
+        Alert.alert("Error", "An unexpected error occurred. Please try again.");
       }
     }
   };
@@ -102,8 +108,8 @@ const styles = StyleSheet.create({
   },
 
   logo: { 
-    width: 150, 
-    height: 100, 
+    width: 170, 
+    height: 100,  
     resizeMode: 'contain' 
   },
 
@@ -136,7 +142,6 @@ const styles = StyleSheet.create({
     textAlign: 'left', 
     paddingLeft: 20,
     backgroundColor: '#F0EEEE',
-    fontWeight: 'bold', 
   },
 
   buttonContainer: { 

@@ -1,15 +1,31 @@
 import { StyleSheet, Text, View, TouchableOpacity, Image, Dimensions } from 'react-native'
 import React from 'react'
+import pizzas from "../data/pizza.json";
+import { useNavigation } from '@react-navigation/native';
 
 const { width, height } = Dimensions.get('window');
 
+
+
 const SpecialOffer = () => {
+  const navigation = useNavigation();
+  const handleOrderNow = () => {
+    const specialOfferPizza = pizzas.find(pizza => pizza.id === 8);
+  
+    if (specialOfferPizza) {
+      navigation.navigate("PizzaOrder", { pizza: specialOfferPizza });
+      console.log("Special offer pizza:", specialOfferPizza);
+    } else {
+      console.error("Pizza not found in pizza.json");
+    }
+  };
+
   return (
     <View style={styles.offerContainer}>
       <View style={styles.offerContent}>
-        <Text style={styles.offerTitle}>Special Offer</Text>
-        <Text style={styles.offerSubtitle}>Discount 25% off for all pizzas.</Text>
-        <TouchableOpacity style={styles.orderButton}>
+        <Text style={styles.offerTitle}>Ultimate Pizza</Text>
+        <Text style={styles.offerSubtitle}>The perfect blend of flavors with our chef's masterpiece!</Text>
+        <TouchableOpacity style={styles.orderButton} onPress={handleOrderNow}>
           <Text style={styles.orderButtonText}>Order Now</Text>
         </TouchableOpacity>
       </View>
@@ -46,7 +62,7 @@ const styles = StyleSheet.create({
   },
   orderButton: {
     backgroundColor: "#B55638",
-    paddingHorizontal: width * 0.024,
+    paddingHorizontal: width * 0.03,
     paddingVertical: height * 0.012,
     borderRadius: height * 0.030,
     marginTop: height * 0.016,

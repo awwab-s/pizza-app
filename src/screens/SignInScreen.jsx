@@ -92,6 +92,8 @@ const SignInScreen = ({ navigation }) => {
         Alert.alert("Error", "Invalid email or password");
       } else if (error.code === "auth/invalid-email") {
         Alert.alert("Error", "Please enter a valid email address");
+      } else {
+        Alert.alert("Error", "An unexpected error occurred. Please try again.");
       }
     }
   };
@@ -148,7 +150,7 @@ const styles = StyleSheet.create({
   },
 
   logo: { 
-    width: 150, 
+    width: 170, 
     height: 100, 
     resizeMode: 'contain' 
   },
@@ -182,7 +184,6 @@ const styles = StyleSheet.create({
     textAlign: 'left', 
     paddingLeft: 20,
     backgroundColor: '#F0EEEE',
-    fontWeight: 'bold', 
   },
 
   buttonContainer: { 

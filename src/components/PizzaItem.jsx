@@ -20,9 +20,9 @@ const PizzaItem = ({ imgURL, name, price, discountText, rating }) => {
         <View style={styles.priceContainer}>
           <View style={styles.priceWrapper}>
             <Text style={styles.price}>Rs. {price}</Text>
-            <View style={styles.discountBadge}>
+            {/* <View style={styles.discountBadge}>
               <Text style={styles.discountText}>{discountText}</Text>
-            </View>
+            </View> */}
           </View>
         </View>
       </View>
