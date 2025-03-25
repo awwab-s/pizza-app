@@ -50,9 +50,13 @@ const ProfileScreen = () => {
   };
 
   const fetchUserOrders = async () => {
-    try {
-      const user = auth.currentUser;
+    const user = auth.currentUser;
 
+    if (!user) {
+      console.log("No user logged in. No orders to fetch.");
+      return;
+    }
+    try {
       const ordersRef = collection(db, "orders");
       const q = query(ordersRef, where("user_id", "==", user.uid));
       const querySnapshot = await getDocs(q);
