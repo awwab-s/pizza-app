@@ -14,7 +14,9 @@ const ProfileScreen = () => {
   const [userData, setUserData] = useState(null);
   const [orders, setOrders] = useState([]);
   const [isGuest, setIsGuest] = useState(false);
-  const [loadingOrders, setLoadingOrders] = useState(true);
+  const [loadingOrders, setLoadingOrders] = useState(false);
+  const [loadingUserData, setLoadingUserData] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [showMore, setShowMore] = useState(false);
 
   const navigation = useNavigation();
@@ -37,10 +39,12 @@ const ProfileScreen = () => {
       if (!isGuest) {
         const user = auth.currentUser;
         if (user) {
+          setLoadingUserData(true);
           const userDoc = await getDoc(doc(db, "users", user.uid));
           if (userDoc.exists()) {
             setUserData(userDoc.data());
             console.log(userDoc.data());
+            setLoadingUserData(false);
           }
         }
       }
@@ -56,6 +60,8 @@ const ProfileScreen = () => {
       console.log("No user logged in. No orders to fetch.");
       return;
     }
+
+    setLoadingOrders(true);
     try {
       const ordersRef = collection(db, "orders");
       const q = query(ordersRef, where("user_id", "==", user.uid));
@@ -67,10 +73,10 @@ const ProfileScreen = () => {
       });
 
       setOrders(ordersList);
-      setLoadingOrders(false);
       console.log("Fetched order history:", ordersList);
     } catch (error) {
       console.error("Error fetching orders:", error);
+    } finally {
       setLoadingOrders(false);
     }
   };
@@ -89,6 +95,7 @@ const ProfileScreen = () => {
         {
           text: "Yes",
           onPress: async () => {
+            setLoading(true);
             try {
               await AsyncStorage.removeItem("user");
               console.log("User removed from AsyncStorage!");
@@ -99,6 +106,8 @@ const ProfileScreen = () => {
               });
             } catch (error) {
               console.error("Error signing out:", error);
+            } finally {
+              setLoading(false);
             }
           },
         },
@@ -106,9 +115,10 @@ const ProfileScreen = () => {
     );
   };
 
-  const handleRefresh = () => {
-    fetchUserData(); // Refresh user data when the button is pressed
-    fetchUserOrders();
+  const handleRefresh = async () => {
+    setLoadingOrders(true);
+    await fetchUserData(); // Refresh user data when the button is pressed
+    await fetchUserOrders();
   };
 
   const handleOrderClick = (orderID) => {
@@ -131,28 +141,34 @@ const ProfileScreen = () => {
         <View style={styles.header}>
           <Text style={styles.title}>Profile</Text>
           <View style={styles.buttonContainer}>
-            <TouchableOpacity onPress={handleRefresh} style={styles.refreshButton}>
+            <TouchableOpacity onPress={handleRefresh} style={styles.refreshButton} disabled={loading}>
                 <Icon name="refresh" size={24} color="#FFF" />
             </TouchableOpacity>
-            <TouchableOpacity onPress={handleSignOut} style={styles.signOutButton}>
+            <TouchableOpacity onPress={handleSignOut} style={styles.signOutButton} disabled={loading}>
               <Icon name="logout" size={24} color="#FFF" />
             </TouchableOpacity>
           </View>
         </View>
         <View style={styles.divider} />
         <View style={styles.userInfo}>
-          <View style={styles.infoRow}>
-            <Icon name="person" style={styles.icon} />
-            <Text style={[styles.infoText, styles.name]}>{userData?.name || 'N/A'}</Text>
-          </View>
-          <View style={styles.infoRow}>
-            <Icon name="email" style={styles.icon} />
-            <Text style={[styles.infoText, styles.email]}>{userData?.email || 'N/A'}</Text>
-          </View>
-          <View style={styles.infoRow}>
-            <Icon name="location-on" style={styles.icon} />
-            <Text style={[styles.infoText, styles.address]}>{userData?.address || 'No Address Set!'}</Text>
-          </View>
+          {loadingOrders ? (
+            <ActivityIndicator size="large" color="#B55638" />  // Show loading spinner while fetching orders
+          ) : (
+            <>
+              <View style={styles.infoRow}>
+                <Icon name="person" style={styles.icon} />
+                <Text style={[styles.infoText, styles.name]}>{userData?.name || 'N/A'}</Text>
+              </View>
+              <View style={styles.infoRow}>
+                <Icon name="email" style={styles.icon} />
+                <Text style={[styles.infoText, styles.email]}>{userData?.email || 'N/A'}</Text>
+              </View>
+              <View style={styles.infoRow}>
+                <Icon name="location-on" style={styles.icon} />
+                <Text style={[styles.infoText, styles.address]}>{userData?.address || 'No Address Set!'}</Text>
+              </View>
+            </>
+          )}
         </View>
 
         <View style={styles.divider} />
@@ -187,6 +203,13 @@ const ProfileScreen = () => {
           )}
         </View>
       </ScrollView>
+
+      {/* Loading Overlay */}
+        {loading && (
+          <View style={styles.loadingOverlay}>
+            <ActivityIndicator size="large" color="#B55638" />
+          </View>
+        )}
     </SafeAreaView>
   );
 }
@@ -265,6 +288,9 @@ const styles = StyleSheet.create({
   address: { 
     fontSize: 14, 
     color: "#777",
+    flexShrink: 1,   
+    flexWrap: "wrap", 
+    width: "100%",
   },
   infoRow: {
     flexDirection: "row",
@@ -318,6 +344,12 @@ const styles = StyleSheet.create({
     color: "#007bff",
     textAlign: "center",
     marginTop: height * 0.015,
+  },
+  loadingOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

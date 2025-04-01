@@ -5,15 +5,17 @@ import { db, auth } from "../../firebaseConfig";
 
 const { width } = Dimensions.get("window")
 
-const OrderFooter = ({ total, pizza, size, crust, toppings }) => {
+const OrderFooter = ({ total, pizza, size, crust, toppings, setLoading }) => {
   const handleAddToCart = async () => {
     const user = auth.currentUser;
 
     if (!user) {
-      alert("Please sign in to add items to the cart.");
+      Alert.alert("Login Required", "Please sign in to add items to the cart.");
       navigation.navigate("SignIn");
       return;
     }
+
+    setLoading(true);
 
     try {
       // Reference to the user's document in the users collection
@@ -64,6 +66,8 @@ const OrderFooter = ({ total, pizza, size, crust, toppings }) => {
       }
     } catch (error) {
       console.error("Error adding to cart:", error);
+    } finally {
+      setLoading(false);
     }
   };
 

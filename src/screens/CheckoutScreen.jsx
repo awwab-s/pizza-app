@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { View, Text, StyleSheet, Dimensions, ScrollView, TouchableOpacity } from "react-native"
+import { View, Text, StyleSheet, Dimensions, ScrollView, TouchableOpacity, ActivityIndicator } from "react-native"
 import { useNavigation, useRoute } from "@react-navigation/native"
 import { doc, getDoc } from "firebase/firestore"
 import { db } from "../../firebaseConfig"
@@ -38,9 +38,13 @@ const CheckoutScreen = () => {
   if (!orderData) {
     return (
       <View style={styles.loadingContainer}>
-        <Text>Loading...</Text>
+        <ActivityIndicator size="large" color="#b55638" />
       </View>
     )
+  }
+
+  const handleDone = () => {
+    navigation.navigate("Delivery", { orderID })
   }
 
   const { order_time, pizzas_ordered, total_bill, delivery_address, phone_number, order_id } = orderData
@@ -86,7 +90,7 @@ const CheckoutScreen = () => {
         <Text style={styles.infoText}>{phone_number}</Text>
       </View>
 
-      <TouchableOpacity style={styles.confirmButton} onPress={() => navigation.navigate("Delivery", { orderID })}>
+      <TouchableOpacity style={styles.confirmButton} onPress={handleDone}>
         <Text style={styles.buttonText}>Done</Text>
       </TouchableOpacity>
     </ScrollView>
@@ -157,26 +161,27 @@ const styles = StyleSheet.create({
   quantityText: {
     fontSize: scale(16),
     fontWeight: "600",
-    color: "#8e8e8e",
+    color: "#888",
     marginBottom: scale(8),
   },
   sizeText: {
     fontSize: scale(14),
     fontWeight: "500",  
-    color: "#8e8e8e",  
+    color: "#888",  
     marginBottom: scale(4),
   },
   crustText: {
     fontSize: scale(14),
     fontWeight: "500",  
-    color: "#8e8e8e",  
+    color: "#888",  
     marginBottom: scale(4),
   },
   toppingsText: {
     fontSize: scale(14),
     fontWeight: "500", 
-    color: "#8e8e8e",  
+    color: "#888",  
     marginBottom: scale(14),
+    lineHeight: 20,
   },
   itemDetails: {
     fontSize: scale(15),
@@ -210,12 +215,12 @@ const styles = StyleSheet.create({
   confirmButton: {
     backgroundColor: "#b55638",
     borderRadius: scale(30),
-    paddingVertical: scale(16),
+    padding: 12,
     alignItems: "center",
   },
   buttonText: {
-    fontSize: scale(18),
-    fontWeight: "bold",
+    fontSize: 14, 
+    fontWeight: 'bold',
     color: "#fff",
   },
   loadingContainer: {

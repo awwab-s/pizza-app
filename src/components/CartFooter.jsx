@@ -8,10 +8,11 @@ import React, { useState, useEffect } from "react"
 const { width, height } = Dimensions.get("window")
 const scale = (size) => (width / 375) * size
 
-const CartFooter = ({ totalBill, cartItems }) => {
+const CartFooter = ({ totalBill, cartItems, setLoading }) => {
   const [userData, setUserData] = useState(null);
   const [phoneNumber, setPhoneNumber] = useState("")
   const [modalVisible, setModalVisible] = useState(false)
+  
   const navigation = useNavigation()
 
   useEffect(() => {
@@ -59,11 +60,12 @@ const CartFooter = ({ totalBill, cartItems }) => {
 
   const placeOrder  = async () => {
     const user = auth.currentUser
+    setLoading(true);
 
     if (!userData) {
       console.error("User data not available!");
       return;
-  }
+    }
 
     try {
       const orderID = await generateUniqueOrderID()
@@ -90,6 +92,8 @@ const CartFooter = ({ totalBill, cartItems }) => {
       navigation.navigate("Checkout", { orderID })
     } catch (error) {
       console.error("Error placing order:", error)
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -147,21 +151,27 @@ const CartFooter = ({ totalBill, cartItems }) => {
               value={phoneNumber}
               onChangeText={setPhoneNumber}
             />
-            <TouchableOpacity
-              style={styles.submitButton}
-              onPress={() => {
-                placeOrder()
-                setModalVisible(false) // Close modal after submitting
-              }}
-            >
-              <Text style={styles.submitButtonText}>Submit</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.cancelButton}
-              onPress={() => setModalVisible(false)} // Close modal if canceled
-            >
-              <Text style={styles.cancelButtonText}>Cancel</Text>
-            </TouchableOpacity>
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
+                style={styles.cancelButton}
+                onPress={() => setModalVisible(false)} 
+              >
+                <Text style={styles.cancelButtonText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.submitButton}
+                onPress={() => {
+                  if (!phoneNumber) {
+                    Alert.alert("Error", "Phone Number Required");
+                    return;
+                  }
+                  placeOrder()
+                  setModalVisible(false)
+                }}
+              >
+                <Text style={styles.submitButtonText}>Submit</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </Modal>
@@ -222,7 +232,7 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: scale(18),
-    fontWeight: "600",
+    fontWeight: "bold",
     marginBottom: scale(15),
   },
   input: {
@@ -234,22 +244,38 @@ const styles = StyleSheet.create({
     paddingLeft: scale(10),
     marginBottom: scale(15),
   },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    gap: scale(10),
+  },
   submitButton: {
+    flex: 1,
+    alignItems: "center",
     backgroundColor: "#b55638",
-    borderRadius: scale(20),
+    borderRadius: scale(8),
     paddingVertical: scale(10),
     paddingHorizontal: scale(20),
   },
   submitButtonText: {
     fontSize: scale(16),
-    color: "white",
+    color: "#fff",
+    fontWeight: "bold",
   },
   cancelButton: {
-    marginTop: scale(10),
+    flex: 1,
+    backgroundColor: "#ccc",
+    alignItems: "center",
+    borderRadius: scale(8),
+    paddingVertical: scale(10),
+    paddingHorizontal: scale(20),
+    // marginTop: scale(10),
   },
   cancelButtonText: {
     fontSize: scale(16),
-    color: "#888",
+    color: "#fff",
+    fontWeight: "bold",
   },
 })
 

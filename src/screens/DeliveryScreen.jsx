@@ -14,8 +14,8 @@ const DeliveryScreen = () => {
       <LottieView style = {styles.loading} source={require('../data/delivery.json')} autoPlay loop />
       <Text style={{fontSize: height*0.020, fontWeight: 'bold', color: '#dd714e'}}>Your pizza is on the way!</Text>
       <Text style={{fontSize: height*0.030, fontWeight: 'bold', color: '#868686'}}>Order #{orderID}</Text>
-      <TouchableOpacity style={styles.Button} onPress={() => navigation.navigate("Main")}>
-        <Text style={styles.ButtonText}>Go to Home</Text>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Main")}>
+        <Text style={styles.buttonText}>Go to Home</Text>
       </TouchableOpacity>
 
     </View>
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     height: height * 0.300,
   },
 
-  Button: { 
+  button: { 
     backgroundColor: '#b65a38', 
     padding: 12, 
     width: width * 0.9, 
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     marginTop: 30 
   },
 
-  ButtonText: { 
+  buttonText: { 
     color: '#fff', 
     fontSize: 14, 
     fontWeight: 'bold'

@@ -32,7 +32,6 @@ const HomeScreen = ({navigation}) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoadingPizzas(true);
       await fetchPizzas();
       setLoadingPizzas(false);
     };

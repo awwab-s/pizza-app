@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity, Dimensions } from 'react-native'
-import React, { useEffect } from "react";
+import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity, Dimensions, ActivityIndicator } from 'react-native'
+import React, { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../firebaseConfig";
@@ -7,6 +7,8 @@ import { auth } from "../../firebaseConfig";
 const { width, height } = Dimensions.get('window');
 
 const WelcomeScreen = ({ navigation }) => {
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       const storedUser = await AsyncStorage.getItem("user");
@@ -16,6 +18,7 @@ const WelcomeScreen = ({ navigation }) => {
         navigation.replace("Main"); // Redirect to home if not guest
       } else {
         console.log("No authenticated user active. Staying on Welcome screen.");
+        setLoading(false);
       }
     });
 
@@ -27,6 +30,15 @@ const WelcomeScreen = ({ navigation }) => {
     console.log('Guest user saved to AsyncStorage!');
     navigation.navigate('Main');
   };
+
+  // if (loading) {
+  //   // Show a loading spinner while checking authentication
+  //   return (
+  //     <SafeAreaView style={styles.loadingContainer}>
+  //       <ActivityIndicator size="large" color="#B55638" />
+  //     </SafeAreaView>
+  //   );
+  // }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -59,6 +71,12 @@ const WelcomeScreen = ({ navigation }) => {
           <Text style={styles.guestButtonText}>Continue as Guest</Text>
         </TouchableOpacity>
       </View>
+
+      {loading && (
+        <View style={styles.loadingOverlay}>
+          <ActivityIndicator size="large" color="#B55638" />
+        </View>
+      )}
 
     </SafeAreaView>
   )
@@ -159,5 +177,19 @@ const styles = StyleSheet.create({
     color: '#555',
     fontSize: 14,
     fontWeight: 'bold' 
+  },
+
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+  },
+
+  loadingOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    justifyContent: 'center',
+    alignItems: 'center',
   }
 });

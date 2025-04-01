@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "335436484573-rj8ck3bbo5tldkjn2rure98s269se3jg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pizzaapp",
+            "certificate_hash": "ed1658508e2266b94efe76b42906daf19ab9aa0f"
+          }
+        },
+        {
           "client_id": "335436484573-1v7poi970k2qf3vqrell08kq3pi6o2ok.apps.googleusercontent.com",
           "client_type": 3
         }

@@ -113,7 +113,7 @@ const App = () => {
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
-    }, 2000); // Show splash screen for 2 seconds
+    }, 3000); // Show splash screen for 2 seconds
   }, []);
 
   if (isLoading) {

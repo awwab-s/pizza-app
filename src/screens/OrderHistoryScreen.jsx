@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { View, Text, StyleSheet, Dimensions, ScrollView, TouchableOpacity } from "react-native"
+import { View, Text, StyleSheet, Dimensions, ScrollView, ActivityIndicator } from "react-native"
 import { useNavigation, useRoute } from "@react-navigation/native"
 import { doc, getDoc } from "firebase/firestore"
 import { db } from "../../firebaseConfig"
@@ -38,7 +38,7 @@ const OrderHistoryScreen = () => {
   if (!orderData) {
     return (
       <View style={styles.loadingContainer}>
-        <Text>Loading...</Text>
+        <ActivityIndicator size="large" color="#b55638" />
       </View>
     )
   }
@@ -138,26 +138,27 @@ const styles = StyleSheet.create({
   quantityText: {
     fontSize: scale(16),
     fontWeight: "600",
-    color: "#8e8e8e",
+    color: "#888",
     marginBottom: scale(8),
   },
   sizeText: {
     fontSize: scale(14),
     fontWeight: "500",  
-    color: "#8e8e8e",  
+    color: "#888",  
     marginBottom: scale(4),
   },
   crustText: {
     fontSize: scale(14),
     fontWeight: "500",  
-    color: "#8e8e8e",  
+    color: "#888",  
     marginBottom: scale(4),
   },
   toppingsText: {
     fontSize: scale(14),
     fontWeight: "500", 
-    color: "#8e8e8e",  
+    color: "#888",  
     marginBottom: scale(14),
+    lineHeight: 20,
   },
   itemDetails: {
     fontSize: scale(15),

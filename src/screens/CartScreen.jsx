@@ -16,6 +16,7 @@ const CartScreen = ({pizza, price, size}) => {
   const navigation = useNavigation()
   const [cartItems, setCartItems] = useState([])
   const [loading, setLoading] = useState(true)
+  const [isPlacingOrder, setIsPlacingOrder] = useState(false)
 
   useEffect(() => {
     const fetchCartItems = async () => {
@@ -114,7 +115,14 @@ const CartScreen = ({pizza, price, size}) => {
         )}
       </ScrollView>
 
-      <CartFooter totalBill={totalBill} cartItems={cartItems} />
+      <CartFooter totalBill={totalBill} cartItems={cartItems} setLoading={setIsPlacingOrder} />
+      
+      {/* Loading Overlay */}
+      {isPlacingOrder && (
+        <View style={styles.loadingOverlay}>
+          <ActivityIndicator size="large" color="#B55638" />
+        </View>
+      )}
     </View>
   )
 }
@@ -143,6 +151,12 @@ const styles = StyleSheet.create({
     color: "#868686",
     textAlign: "center",
   },
+  loadingOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  }
 })
 
 export default CartScreen

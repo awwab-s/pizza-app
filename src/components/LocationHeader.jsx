@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, PermissionsAndroid, Alert, Dimensions } from "react-native"
+import { View, Text, TouchableOpacity, StyleSheet, TextInput, ActivityIndicator, PermissionsAndroid, Alert, Dimensions, Modal } from "react-native"
 
 import Icon from "react-native-vector-icons/Feather"
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -13,6 +13,8 @@ const { width, height } = Dimensions.get("window");
 
 const LocationHeader = ({isGuest}) => {
   const [loading, setLoading] = useState(false);
+  const [manualAddress, setManualAddress] = useState("");
+  const [modalVisible, setModalVisible] = useState(false);
 
   const navigation = useNavigation();
   
@@ -106,13 +108,35 @@ const LocationHeader = ({isGuest}) => {
     }
   };
 
+  const handleLocationSelection = () => {
+    Alert.alert(
+      "Set Location",
+      "How would you like to enter your address?",
+      [
+        { text: "Manual", onPress: () => setModalVisible(true) },
+        { text: "Automatic", onPress: () => getCurrentLocation() },
+      ]
+    );
+  };
+
+  const handleManualSave = async () => {
+    if (manualAddress === "") {
+      Alert.alert("Error", "Please enter an address.");
+      return;
+    }
+    setLoading(true);
+    await saveLocation(manualAddress);
+    setLoading(false);
+    setModalVisible(false);
+  };
+
   return (
     <View style={styles.header}>
       <View>
         <Text style={styles.locationLabel}>Location</Text>
         <TouchableOpacity
           disabled={isGuest || loading} // Disable button for guests
-          onPress={getCurrentLocation}
+          onPress={handleLocationSelection}
           style={[styles.locationContainer, { opacity: isGuest ? 0.5 : 1 }]}
         >
           <Ionicons name="location-sharp" size={height * 0.030} color="#B55638" style={{marginRight: 5}} />
@@ -133,6 +157,29 @@ const LocationHeader = ({isGuest}) => {
       >
         <Ionicons name="cart-outline" size={height * 0.04} color="#0f0e0d" />
       </TouchableOpacity>
+
+      {/* Modal for Manual Address Entry */}
+      <Modal animationType="slide" transparent={true} visible={modalVisible}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Enter Your Address</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Address"
+              value={manualAddress}
+              onChangeText={setManualAddress}
+            />
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.cancelButton}>
+                <Text style={styles.buttonText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleManualSave} style={styles.saveButton}>
+                <Text style={styles.buttonText}>Save</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   )
 }
@@ -170,5 +217,56 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     position: "relative",
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
+  },
+  modalContent: {
+    width: width * 0.8,
+    padding: width * 0.05,
+    backgroundColor: "white",
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  modalTitle: {
+    fontSize: height * 0.024,
+    fontWeight: "bold",
+    marginBottom: 15,
+  },
+  input: {
+    width: "100%",
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: width * 0.02,
+    padding: 10,
+    marginBottom: 15,
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    gap: width * 0.03,
+  },
+  cancelButton: {
+    flex: 1,
+    padding: 10,
+    alignItems: "center",
+    backgroundColor: "#ccc",
+    borderRadius: width * 0.02,
+  },
+  saveButton: {
+    flex: 1,
+    padding: 10,
+    alignItems: "center",
+    backgroundColor: "#B55638",
+    borderRadius: width * 0.02,
+  },
+  buttonText: {
+    color: "white",
+    fontSize: height * 0.02,
+    fontWeight: "bold",
   },
 })

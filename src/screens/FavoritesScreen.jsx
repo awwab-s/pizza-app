@@ -18,7 +18,7 @@ const FavoritesScreen = () => {
     try {      
       const user = auth.currentUser;
       if (!user) {
-        alert("Please sign in to view favorites.");
+        Alert.alert("Login Required", "Please sign in to view favorites.");
         navigation.replace("SignIn");
         return;
       }
@@ -85,8 +85,9 @@ const FavoritesScreen = () => {
     );
   };
 
-  const handleRefresh = () => {
-    fetchUserData();
+  const handleRefresh = async () => {
+    setLoadingPizzas(true);
+    await fetchUserData();
   }
 
   return (

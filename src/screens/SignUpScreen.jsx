@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, SafeAreaView, TextInput, TouchableOpacity, Image, Dimensions, ScrollView, Alert } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, TextInput, TouchableOpacity, Image, Dimensions, ScrollView, Alert, ActivityIndicator } from 'react-native'
 import React, { useState } from 'react';
 import Icon from "react-native-vector-icons/Feather";
 import { createUserWithEmailAndPassword } from "firebase/auth";
@@ -12,12 +12,15 @@ const SignUpScreen = ({ navigation }) => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleSignUp = async () => {
     if (!username || !email || !password) {
       Alert.alert("Error", "All fields are required!");
       return;
     }
+
+    setLoading(true);
 
     try {
       // Create user with email & password
@@ -57,6 +60,8 @@ const SignUpScreen = ({ navigation }) => {
       } else {
         Alert.alert("Error", "An unexpected error occurred. Please try again.");
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -83,11 +88,17 @@ const SignUpScreen = ({ navigation }) => {
         </View>
 
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.signUpButton} onPress={handleSignUp}>
+          <TouchableOpacity style={styles.signUpButton} onPress={handleSignUp} disabled={loading}>
             <Text style={styles.signUpButtonText}>Sign Up</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
+      {/* Loading Overlay */}
+      {loading && (
+        <View style={styles.loadingOverlay}>
+          <ActivityIndicator size="large" color="#B55638" />
+        </View>
+      )}
     </SafeAreaView>
   )
 }
@@ -192,5 +203,12 @@ const styles = StyleSheet.create({
   googleButtonText: { 
     fontSize: 14, 
     fontWeight: 'bold',
-  }
+  },
+
+  loadingOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });

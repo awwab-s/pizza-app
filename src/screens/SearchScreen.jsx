@@ -13,12 +13,17 @@ const SearchScreen = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
   // Filter pizzas based on searchQuery
+  const normalizeText = (text) => text.toLowerCase().replace(/\s+/g, " ").trim();
   const filteredPizzas =
-    searchQuery.trim() === ""
-      ? [] // Don't show any pizzas initially
-      : pizzas.filter((pizza) =>
-          pizza.name.toLowerCase().includes(searchQuery.toLowerCase())
+    normalizeText(searchQuery) === ""
+      ? []
+      : pizzas.filter((pizza) => {
+        const fullPizzaName = `${pizza.name} Pizza`; // Add "Pizza" to match UI
+        return (
+          normalizeText(pizza.name).includes(normalizeText(searchQuery)) ||
+          normalizeText(fullPizzaName).includes(normalizeText(searchQuery))
         );
+      });
 
   return (
     <SafeAreaView style={styles.container}>

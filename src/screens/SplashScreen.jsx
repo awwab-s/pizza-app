@@ -17,7 +17,7 @@ const SplashScreen = () => {
       }),
       Animated.timing(scale, {
         toValue: 1,
-        duration: 2000,
+        duration: 4000,
         easing: Easing.out(Easing.exp),
         useNativeDriver: true,
       }),

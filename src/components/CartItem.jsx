@@ -56,7 +56,7 @@ const CartItem = ({ item, onUpdateQuantity, onDelete }) => {
 
         <View style={styles.contentContainer}>
           <View style={styles.infoContainer}>
-            <Text style={styles.name}>{item.name} Pizza</Text>
+            <Text style={styles.name} numberOfLines={1} ellipsizeMode="tail">{item.name} Pizza</Text>
             <Text style={styles.description}>{item.size} Size | {item.crust} Crust</Text>
             <Text 
               style={[styles.toppings, Array.isArray(item.toppings) && item.toppings.length > 0 ? {} : styles.noToppings]}

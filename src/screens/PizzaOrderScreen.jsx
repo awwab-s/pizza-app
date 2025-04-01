@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { View, StyleSheet, ScrollView, Dimensions, Alert } from "react-native"
+import { View, StyleSheet, ScrollView, Dimensions, ActivityIndicator } from "react-native"
 import OrderHeader from "../components/OrderHeader"
 import PizzaInfo from "../components/PizzaInfo"
 import SizeSelector from "../components/SizeSelector"
@@ -15,6 +15,7 @@ const PizzaOrderScreen = ({ route }) => {
   const [size, setSize] = useState("Medium")
   const [crust, setCrust] = useState("Cheese")
   const [toppings, setToppings] = useState([])
+  const [loading, setLoading] = useState(false)
 
   const prices = {
     "Cheese Crust": 150,
@@ -77,8 +78,14 @@ const PizzaOrderScreen = ({ route }) => {
         pizza={pizza} 
         size={size} 
         crust={crust} 
-        toppings={toppings} 
+        toppings={toppings}
+        setLoading={setLoading}
       />
+      {loading && (
+        <View style={styles.loadingOverlay}>
+          <ActivityIndicator size="large" color="#B55638" />
+        </View>
+      )}
     </View>
   )
 }
@@ -98,6 +105,12 @@ const styles = StyleSheet.create({
     width: "100%",
     alignSelf: "center",
   },
+  loadingOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  }
 })
 
 export default PizzaOrderScreen
