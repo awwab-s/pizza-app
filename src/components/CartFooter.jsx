@@ -99,7 +99,7 @@ const CartFooter = ({ totalBill, cartItems, setLoading }) => {
 
   const handlePlaceOrder = () => {
     if (cartItems.length === 0) {
-      Alert.alert("Empty Cart", "Your cart is empty.")
+      Alert.alert("Empty Cart", "Your cart is empty")
       return
     }
 

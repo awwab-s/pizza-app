@@ -23,6 +23,7 @@ import DetailsScreen from "./src/screens/DetailsScreen";
 import PizzaOrderScreen from "./src/screens/PizzaOrderScreen";
 import CheckoutScreen from "./src/screens/CheckoutScreen";
 import DeliveryScreen from "./src/screens/DeliveryScreen";
+import MapScreen from "./src/screens/MapScreen";
 import OrderHistoryScreen from "./src/screens/OrderHistoryScreen";
 
 const Stack = createStackNavigator();
@@ -135,6 +136,7 @@ const App = () => {
         <Stack.Screen name="Checkout" component={CheckoutScreen} />
         <Stack.Screen name="Delivery" component={DeliveryScreen} />
         <Stack.Screen name="OrderHistory" component={OrderHistoryScreen} />
+        <Stack.Screen name="Map" component={MapScreen} />
         <Stack.Screen name="Main" component={BottomTabs} />
       </Stack.Navigator>
     </NavigationContainer>
