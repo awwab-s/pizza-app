@@ -78,34 +78,35 @@ const SignInScreen = ({ navigation }) => {
       Alert.alert("Error", "All fields are required!");
       return;
     }
-
+  
     setLoading(true);
-
+  
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-
-      console.log("Sign-In Successful!");
-      Alert.alert("Success", "User logged in!");
-
-      // Save user data in AsyncStorage
-      await AsyncStorage.setItem("user", JSON.stringify(user));
-      console.log("User saved to AsyncStorage!");
-
-      navigation.navigate("Main");
+      const response = await fetch('http://192.168.18.116:5000/api/users/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        console.log("User logged in:", data);
+  
+        await AsyncStorage.setItem('user', JSON.stringify(data));
+        Alert.alert("Success", "User logged in!");
+        navigation.navigate("Main");
+      } else {
+        Alert.alert("Error", data.message || "Invalid credentials");
+      }
     } catch (error) {
       console.error("Sign-In Error:", error);
-      if (error.code === "auth/user-not-found" || error.code === "auth/wrong-password") {
-        Alert.alert("Error", "Invalid email or password");
-      } else if (error.code === "auth/invalid-email") {
-        Alert.alert("Error", "Please enter a valid email address.");
-      } else {
-        Alert.alert("Error", "An unexpected error occurred. Please try again.");
-      }
+      Alert.alert("Error", "An unexpected error occurred. Please try again.");
     } finally {
       setLoading(false);
     }
   };
+  
 
   return (
     <SafeAreaView style={styles.container}>

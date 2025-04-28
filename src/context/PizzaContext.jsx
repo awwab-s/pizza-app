@@ -11,21 +11,17 @@ export const PizzaProvider = ({ children }) => {
   // Function to fetch pizzas from Firestore
   const fetchPizzas = async () => {
     try {
-      const pizzasCollection = collection(db, "pizzas");
-      const q = query(pizzasCollection, orderBy("id"));
-  
-      const pizzasSnapshot = await getDocs(q);
-  
-      const pizzasList = pizzasSnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-
-      setPizzas(pizzasList);
+      const response = await fetch('http://192.168.18.116:5000/api/pizzas');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      setPizzas(data);
     } catch (error) {
       console.error("Error fetching pizzas:", error);
     }
   };
+
 
   // Fetch pizzas when the component mounts
   useEffect(() => {

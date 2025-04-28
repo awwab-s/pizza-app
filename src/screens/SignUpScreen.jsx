@@ -19,51 +19,35 @@ const SignUpScreen = ({ navigation }) => {
       Alert.alert("Error", "All fields are required!");
       return;
     }
-
+  
     setLoading(true);
-
+  
     try {
-      // Create user with email & password
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-
-      console.log("Sign-Up Successful!");
-
-      // Store user data in Firestore
-      await setDoc(doc(db, "users", user.uid), {
-        uid: user.uid,
-        name: username,
-        email: user.email,
-        address: "",
-        photoURL: user.photoURL || "",
-        createdAt: new Date(),
-        favorites: [],
+      const response = await fetch('http://192.168.18.116:5000/api/users/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: username, email, password }),
       });
-
-      console.log("User account stored in Firestore!");
-
-      // Store user data in AsyncStorage
-      await AsyncStorage.setItem('user', JSON.stringify(user));
-      console.log("User saved to AsyncStorage!");
-
-      Alert.alert("Success", "Account created successfully!");
-
-      navigation.navigate("Main"); // Navigate to the main screen
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        console.log("User registered:", data);
+  
+        await AsyncStorage.setItem('user', JSON.stringify(data));
+        Alert.alert("Success", "Account created successfully!");
+        navigation.navigate("Main");
+      } else {
+        Alert.alert("Error", data.message || "Registration failed");
+      }
     } catch (error) {
       console.error("Sign-Up Error:", error);
-      if (error.code === "auth/email-already-in-use") {
-        Alert.alert("Error", "This email is already in use. Try logging in.");
-      } else if (error.code === "auth/invalid-email") {
-        Alert.alert("Error", "Please enter a valid email address.");
-      } else if (error.code === "auth/weak-password") {
-        Alert.alert("Error", "Password should be at least 6 characters.");
-      } else {
-        Alert.alert("Error", "An unexpected error occurred. Please try again.");
-      }
+      Alert.alert("Error", "An unexpected error occurred.");
     } finally {
       setLoading(false);
     }
   };
+  
 
   return (
     <SafeAreaView style={styles.container}>
