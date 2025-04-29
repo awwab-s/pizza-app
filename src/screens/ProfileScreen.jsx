@@ -2,9 +2,6 @@ import { useState, useEffect } from "react";
 import { View, Text, StyleSheet, SafeAreaView, Image, TouchableOpacity, Alert, ScrollView, ActivityIndicator  } from "react-native"
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { Dimensions } from "react-native";
-import { auth, db } from "../../firebaseConfig";
-import { signOut } from "firebase/auth";
-import { doc, getDoc, collection, query, orderBy, getDocs, where } from "firebase/firestore";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -36,50 +33,64 @@ const ProfileScreen = () => {
 
   const fetchUserData = async () => {
     try {
-      if (!isGuest) {
-        const user = auth.currentUser;
-        if (user) {
-          setLoadingUserData(true);
-          const userDoc = await getDoc(doc(db, "users", user.uid));
-          if (userDoc.exists()) {
-            setUserData(userDoc.data());
-            console.log(userDoc.data());
-            setLoadingUserData(false);
-          }
-        }
+      const storedUser = await AsyncStorage.getItem("user");
+      const user = JSON.parse(storedUser);
+  
+      if (!user || !user._id) {
+        Alert.alert("Login Required", "Please sign in to view your profile.");
+        navigation.replace("SignIn");
+        return;
       }
+  
+      setLoadingUserData(true);
+  
+      const response = await fetch(`http://192.168.18.116:5000/api/users/${user._id}`);
+      const data = await response.json();
+  
+      if (response.ok) {
+        setUserData(data);
+        console.log(data);
+      } else {
+        console.error("Failed to fetch user data:", data.message);
+        Alert.alert("Error", data.message || "Failed to fetch user data");
+      }
+  
+      setLoadingUserData(false);
     } catch (error) {
       console.error("Error fetching user data:", error);
+      setLoadingUserData(false);
     }
   };
+  
 
   const fetchUserOrders = async () => {
-    const user = auth.currentUser;
-
-    if (!user) {
-      console.log("No user logged in. No orders to fetch.");
-      return;
-    }
-
-    setLoadingOrders(true);
     try {
-      const ordersRef = collection(db, "orders");
-      const q = query(ordersRef, where("user_id", "==", user.uid));
-      const querySnapshot = await getDocs(q);
-
-      const ordersList = [];
-      querySnapshot.forEach((doc) => {
-        ordersList.push({ id: doc.id, ...doc.data() });
-      });
-
-      setOrders(ordersList);
-      console.log("Fetched order history:", ordersList);
+      const storedUser = await AsyncStorage.getItem("user");
+      const user = JSON.parse(storedUser);
+  
+      if (!user || !user._id) {
+        console.log("No user logged in. No orders to fetch.");
+        return;
+      }
+  
+      setLoadingOrders(true);
+  
+      const response = await fetch(`http://192.168.18.116:5000/api/orders/user/${user._id}`);
+      const data = await response.json();
+  
+      if (response.ok) {
+        setOrders(data.orders); // 🚀 full order details
+        console.log("Fetched order history:", data.orders);
+      } else {
+        console.error("Failed to fetch orders:", data.message);
+      }
     } catch (error) {
       console.error("Error fetching orders:", error);
     } finally {
       setLoadingOrders(false);
     }
   };
+  
 
   useEffect(() => {
     fetchUserData();
@@ -98,8 +109,6 @@ const ProfileScreen = () => {
             setLoading(true);
             try {
               await AsyncStorage.removeItem("user");
-              console.log("User removed from AsyncStorage!");
-              await signOut(auth);
               navigation.reset({
                 index: 0,
                 routes: [{ name: "Welcome" }],

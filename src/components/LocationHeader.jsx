@@ -4,8 +4,7 @@ import { View, Text, TouchableOpacity, StyleSheet, TextInput, ActivityIndicator,
 import Icon from "react-native-vector-icons/Feather"
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import { doc, setDoc } from "firebase/firestore";
-import { auth, db } from "../../firebaseConfig";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Geolocation from "react-native-geolocation-service";
 import { useNavigation } from "@react-navigation/native";
 
@@ -101,15 +100,31 @@ const LocationHeader = ({isGuest}) => {
 
   // Save the location to Firebase Firestore
   const saveLocation = async (address) => {
-    const user = auth.currentUser;
-
     try {
-      await setDoc(
-        doc(db, "users", user.uid),
-        { address: address },
-        { merge: true }
-      );
-      console.log("Address saved successfully.", address);
+      const userData = await AsyncStorage.getItem('user');
+      const user = JSON.parse(userData);
+  
+      if (!user || !user._id) {
+        console.error("No user found in AsyncStorage.");
+        Alert.alert("Error", "You must be logged in to save address.");
+        return;
+      }
+  
+      const response = await fetch(`http://192.168.18.116:5000/api/users/${user._id}/address`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ address }),
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        console.log("Address saved successfully.", data.address);
+        Alert.alert("Success", "Address saved!");
+      } else {
+        console.error("Failed to save address:", data.message);
+        Alert.alert("Error", data.message || "Failed to save address");
+      }
     } catch (error) {
       console.error("Error saving address:", error);
       Alert.alert("Error", "Failed to save address");

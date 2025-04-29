@@ -9,8 +9,8 @@ import Category from "../components/Category"
 import SpecialOffer from "../components/SpecialOffer";
 import PizzaList from "../components/PizzaList";
 
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../../firebaseConfig";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const { width, height } = Dimensions.get('window');
 
@@ -23,11 +23,17 @@ const HomeScreen = ({navigation}) => {
   const [filteredPizzas, setFilteredPizzas] = useState(pizzas);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setIsGuest(!user); // User is not logged in
-    });
+    const checkUser = async () => {
+      try {
+        const user = await AsyncStorage.getItem('user');
+        setIsGuest(!user); // If no user, then it's a guest
+      } catch (error) {
+        console.error("Error checking user login:", error);
+        setIsGuest(true);
+      }
+    };
   
-    return unsubscribe;
+    checkUser();
   }, []);
 
   useEffect(() => {

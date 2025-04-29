@@ -1,40 +1,41 @@
-import { useState, useEffect } from "react"
-import { View, Image, TouchableOpacity, StyleSheet, Dimensions } from "react-native"
-import Icon from "react-native-vector-icons/Feather"
+import { useState, useEffect } from "react";
+import { View, Image, TouchableOpacity, StyleSheet, Dimensions } from "react-native";
+import Icon from "react-native-vector-icons/Feather";
 import Heart from 'react-native-vector-icons/AntDesign';
 import { useNavigation } from "@react-navigation/native";
-import { doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
-import { db, auth } from "../../firebaseConfig";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const { width, height } = Dimensions.get("window")
+const { width, height } = Dimensions.get("window");
 
 const OrderHeader = ({ pizza, imgURL }) => {
-  const [isFavorite, setIsFavorite] = useState(false)
-  const [isGuest, setIsGuest] = useState(false)
-  const navigation = useNavigation()
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [isGuest, setIsGuest] = useState(false);
+  const navigation = useNavigation();
 
   // Fetch favorite status for the current pizza
   useEffect(() => {
     const fetchFavoriteStatus = async () => {
-      const user = auth.currentUser;
-
-      if (!user) {
-        console.log("User is not signed in. Cannot fetch favorite status.");
-        setIsGuest(true);
-        return;
-      }
-
       try {
-        const userRef = doc(db, "users", user.uid);
-        const userSnap = await getDoc(userRef);
+        const storedUser = await AsyncStorage.getItem('user');
+        const user = JSON.parse(storedUser);
 
-        if (userSnap.exists()) {
-          const userData = userSnap.data();
-          const isFavorite = userData.favorites.includes(pizza.id); // Check if pizza is in favorites
+        if (!user || user === "guest" || !user._id) {
+          console.log("Guest user detected. Cannot fetch favorite status.");
+          setIsGuest(true);
+          return;
+        }
+
+        const response = await fetch(`http://192.168.18.116:5000/api/users/${user._id}`);
+        const data = await response.json();
+
+        if (response.ok) {
+          const isFavorite = data.favorites.includes(pizza.id);
           setIsFavorite(isFavorite);
+        } else {
+          console.error("Failed to fetch user favorites:", data.message);
         }
       } catch (error) {
-        console.error("Error fetching favorite status: ", error);
+        console.error("Error fetching favorite status:", error);
       }
     };
 
@@ -42,30 +43,38 @@ const OrderHeader = ({ pizza, imgURL }) => {
   }, [pizza.id]);
 
   // Toggle favorite status
-    const toggleFavorite = async () => {
-      const user = auth.currentUser;
+  const toggleFavorite = async () => {
+    try {
+      const storedUser = await AsyncStorage.getItem('user');
+      const user = JSON.parse(storedUser);
 
-      try {
-        const userRef = doc(db, "users", user.uid);
-        
-        if (isFavorite) {
-          // If already a favorite, remove it from favorites
-          await updateDoc(userRef, {
-            favorites: arrayRemove(pizza.id),
-          });
-        } else {
-          // If not a favorite, add it to favorites
-          await updateDoc(userRef, {
-            favorites: arrayUnion(pizza.id),
-          });
-        }
-  
-        setIsFavorite(!isFavorite);
-        console.log("Favorite status updated", !isFavorite);
-      } catch (error) {
-        console.error("Error updating favorite status: ", error);
+      if (!user || user === "guest" || !user._id) {
+        console.log("Guest users cannot favorite pizzas.");
+        return;
       }
-    };
+
+      const endpoint = isFavorite
+        ? `http://192.168.18.116:5000/api/users/${user._id}/favorites/remove`
+        : `http://192.168.18.116:5000/api/users/${user._id}/favorites/add`;
+
+      const response = await fetch(endpoint, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pizzaId: pizza.id }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setIsFavorite(!isFavorite);
+        console.log("Favorite status updated successfully:", !isFavorite);
+      } else {
+        console.error("Failed to update favorite status:", data.message);
+      }
+    } catch (error) {
+      console.error("Error updating favorite status:", error);
+    }
+  };
 
   return (
     <View style={styles.container}>

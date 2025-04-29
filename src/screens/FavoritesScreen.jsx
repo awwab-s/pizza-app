@@ -3,8 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import PizzaList from "../components/PizzaList";
 import { PizzaContext, getGoogleDriveImage } from "../context/PizzaContext";
-import { auth, db } from "../../firebaseConfig";
-import { doc, getDoc, updateDoc, arrayRemove } from "firebase/firestore";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from "@react-navigation/native";
 const { width, height } = Dimensions.get("window");
 
@@ -15,20 +14,28 @@ const FavoritesScreen = () => {
   const navigation = useNavigation();
 
   const fetchUserData = async () => {
-    try {      
-      const user = auth.currentUser;
-      if (!user) {
+    try {
+      const storedUser = await AsyncStorage.getItem('user');
+      const user = JSON.parse(storedUser);
+  
+      if (!user || !user._id) {
         Alert.alert("Login Required", "Please sign in to view favorites.");
         navigation.replace("SignIn");
         return;
       }
-
-      const userDoc = await getDoc(doc(db, "users", user.uid));
-      if (userDoc.exists()) {
-        setUserData(userDoc.data());
-        console.log(userDoc.data());
+  
+      const response = await fetch(`http://192.168.18.116:5000/api/users/${user._id}`);
+      const data = await response.json();
+  
+      if (response.ok) {
+        setUserData(data);
+        console.log(data);
+      } else {
+        console.error("Failed to fetch user data:", data.message);
+        Alert.alert("Error", data.message || "Failed to fetch user data");
       }
-      setLoadingPizzas(false);    
+  
+      setLoadingPizzas(false);
     } catch (error) {
       console.error("Error fetching user data:", error);
       setLoadingPizzas(false);
@@ -40,29 +47,42 @@ const FavoritesScreen = () => {
   }, []);
 
   const favoritePizzaIds = userData?.favorites || [];
+  console.log("Favorite Pizza IDs:", favoritePizzaIds);
 
   // Filter pizzas that match user's favorite pizza IDs
-  const favoritePizzas = pizzas.filter(pizza => favoritePizzaIds.includes(pizza.id));
+  const favoritePizzas = pizzas.filter(pizza => 
+    favoritePizzaIds.includes(String(pizza.id)));
 
   // Function to handle removing pizza from favorites
   const removeFromFavorites = async (pizzaId) => {
-    const user = auth.currentUser;
-
     try {
-      const userRef = doc(db, "users", user.uid);
-
-      // Remove pizza from favorites array in Firestore
-      await updateDoc(userRef, {
-        favorites: arrayRemove(pizzaId),
+      const storedUser = await AsyncStorage.getItem('user');
+      const user = JSON.parse(storedUser);
+  
+      if (!user || !user._id) {
+        Alert.alert("Login Required", "Please sign in to modify favorites.");
+        navigation.replace("SignIn");
+        return;
+      }
+  
+      const response = await fetch(`http://192.168.18.116:5000/api/users/${user._id}/favorites/remove`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pizzaId }),
       });
-
-      // Update userData state to reflect changes
-      setUserData(prevData => ({
-        ...prevData,
-        favorites: prevData.favorites.filter(id => id !== pizzaId),
-      }));
-
-      console.log("Pizza removed from favorites.", pizzaId);
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        setUserData(prevData => ({
+          ...prevData,
+          favorites: prevData.favorites.filter(id => id !== pizzaId),
+        }));
+        console.log("Pizza removed from favorites.", pizzaId);
+      } else {
+        console.error("Failed to remove favorite:", data.message);
+        Alert.alert("Error", data.message || "Failed to remove favorite");
+      }
     } catch (error) {
       console.error("Error removing pizza from favorites:", error);
     }

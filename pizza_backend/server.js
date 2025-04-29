@@ -4,6 +4,7 @@ import cors from 'cors';
 import connectDB from './config/db.js';
 import pizzaRoutes from './routes/pizzaRoutes.js';
 import userRoutes from './routes/userRoutes.js';
+import orderRoutes from './routes/orderRoutes.js';
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 
 dotenv.config();
@@ -17,6 +18,7 @@ app.use(express.json());
 // Routes
 app.use('/api/pizzas', pizzaRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/orders', orderRoutes);
 
 // Error Middlewares
 app.use(notFound);

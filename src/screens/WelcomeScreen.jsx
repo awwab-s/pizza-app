@@ -1,8 +1,7 @@
 import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity, Dimensions, ActivityIndicator } from 'react-native'
 import React, { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../../firebaseConfig";
+
 
 const { width, height } = Dimensions.get('window');
 
@@ -10,19 +9,24 @@ const WelcomeScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      const storedUser = await AsyncStorage.getItem("user");
-
-      if (user && storedUser !== "guest") {
-        console.log("Firebase Auth user detected:", user.email, "Redirecting to Home screen.");
-        navigation.replace("Main"); // Redirect to home if not guest
-      } else {
-        console.log("No authenticated user active. Staying on Welcome screen.");
+    const checkUser = async () => {
+      try {
+        const storedUser = await AsyncStorage.getItem("user");
+  
+        if (storedUser && storedUser !== "guest") {
+          console.log("User detected from AsyncStorage. Redirecting to Home screen.");
+          navigation.replace("Main");
+        } else {
+          console.log("No authenticated user active. Staying on Welcome screen.");
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error("Error checking user login:", error);
         setLoading(false);
       }
-    });
-
-    return () => unsubscribe();
+    };
+  
+    checkUser();
   }, []);
 
   const handleGuestLogin = async () => {
