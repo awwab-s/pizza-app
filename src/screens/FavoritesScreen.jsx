@@ -6,6 +6,7 @@ import { PizzaContext, getGoogleDriveImage } from "../context/PizzaContext";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from "@react-navigation/native";
 const { width, height } = Dimensions.get("window");
+import { URL } from "../data/URL";
 
 const FavoritesScreen = () => {
   const [userData, setUserData] = useState(null);
@@ -24,7 +25,7 @@ const FavoritesScreen = () => {
         return;
       }
   
-      const response = await fetch(`http://192.168.18.116:5000/api/users/${user._id}`);
+      const response = await fetch((URL+`/users/${user._id}`));
       const data = await response.json();
   
       if (response.ok) {
@@ -65,7 +66,7 @@ const FavoritesScreen = () => {
         return;
       }
   
-      const response = await fetch(`http://192.168.18.116:5000/api/users/${user._id}/favorites/remove`, {
+      const response = await fetch((URL+`/users/${user._id}/favorites/remove`), {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ pizzaId }),

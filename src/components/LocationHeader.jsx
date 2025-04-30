@@ -7,6 +7,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Geolocation from "react-native-geolocation-service";
 import { useNavigation } from "@react-navigation/native";
+import { URL } from "../data/URL";
 
 const { width, height } = Dimensions.get("window");
 
@@ -109,8 +110,9 @@ const LocationHeader = ({isGuest}) => {
         Alert.alert("Error", "You must be logged in to save address.");
         return;
       }
-  
-      const response = await fetch(`http://192.168.18.116:5000/api/users/${user._id}/address`, {
+      
+
+      const response = await fetch((URL+`/users/${user._id}/address`), {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ address }),

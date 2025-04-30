@@ -4,6 +4,7 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import { Dimensions } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { URL } from "../data/URL";
 
 const { width, height } = Dimensions.get("window");
 
@@ -44,7 +45,7 @@ const ProfileScreen = () => {
   
       setLoadingUserData(true);
   
-      const response = await fetch(`http://192.168.18.116:5000/api/users/${user._id}`);
+      const response = await fetch((URL+`/users/${user._id}`));
       const data = await response.json();
   
       if (response.ok) {
@@ -75,7 +76,7 @@ const ProfileScreen = () => {
   
       setLoadingOrders(true);
   
-      const response = await fetch(`http://192.168.18.116:5000/api/orders/user/${user._id}`);
+      const response = await fetch((URL+`/orders/user/${user._id}`));
       const data = await response.json();
   
       if (response.ok) {

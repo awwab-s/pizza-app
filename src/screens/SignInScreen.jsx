@@ -5,6 +5,7 @@ import { getAuth, signInWithEmailAndPassword, signInWithCredential, GoogleAuthPr
 import { collection, doc, setDoc, getDoc } from "firebase/firestore";
 import { auth, WEB_CLIENT_ID, db } from '../../firebaseConfig';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { URL } from '../data/URL';
 
 const { width, height } = Dimensions.get('window');
 
@@ -82,7 +83,7 @@ const SignInScreen = ({ navigation }) => {
     setLoading(true);
   
     try {
-      const response = await fetch('http://192.168.18.116:5000/api/users/login', {
+      const response = await fetch((URL+'/users/login'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),

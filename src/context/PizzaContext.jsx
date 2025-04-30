@@ -1,6 +1,5 @@
 import React, { createContext, useState, useEffect } from "react";
-import { collection, query, orderBy, getDocs } from "firebase/firestore";
-import { db } from "../../firebaseConfig";
+import { URL } from "../data/URL";
 
 // Create the context
 export const PizzaContext = createContext();
@@ -11,7 +10,7 @@ export const PizzaProvider = ({ children }) => {
   // Function to fetch pizzas from Firestore
   const fetchPizzas = async () => {
     try {
-      const response = await fetch('http://192.168.18.116:5000/api/pizzas');
+      const response = await fetch((URL+'/pizzas'));
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }

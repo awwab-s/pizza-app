@@ -1,10 +1,7 @@
 import { StyleSheet, Text, View, SafeAreaView, TextInput, TouchableOpacity, Image, Dimensions, ScrollView, Alert, ActivityIndicator } from 'react-native'
 import React, { useState } from 'react';
-import Icon from "react-native-vector-icons/Feather";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
-import { auth, db } from '../../firebaseConfig';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { URL } from '../data/URL';
 
 const { width, height } = Dimensions.get('window');
 
@@ -23,7 +20,7 @@ const SignUpScreen = ({ navigation }) => {
     setLoading(true);
   
     try {
-      const response = await fetch('http://192.168.18.116:5000/api/users/register', {
+      const response = await fetch((URL+'/users/register'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: username, email, password }),

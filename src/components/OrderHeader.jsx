@@ -4,6 +4,7 @@ import Icon from "react-native-vector-icons/Feather";
 import Heart from 'react-native-vector-icons/AntDesign';
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { URL } from "../data/URL";
 
 const { width, height } = Dimensions.get("window");
 
@@ -25,7 +26,7 @@ const OrderHeader = ({ pizza, imgURL }) => {
           return;
         }
 
-        const response = await fetch(`http://192.168.18.116:5000/api/users/${user._id}`);
+        const response = await fetch((URL+`/users/${user._id}`));
         const data = await response.json();
 
         if (response.ok) {
@@ -54,8 +55,8 @@ const OrderHeader = ({ pizza, imgURL }) => {
       }
 
       const endpoint = isFavorite
-        ? `http://192.168.18.116:5000/api/users/${user._id}/favorites/remove`
-        : `http://192.168.18.116:5000/api/users/${user._id}/favorites/add`;
+        ? (URL+`/users/${user._id}/favorites/remove`)
+        : (URL+`/users/${user._id}/favorites/add`);
 
       const response = await fetch(endpoint, {
         method: 'PUT',
